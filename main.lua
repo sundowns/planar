@@ -1,33 +1,29 @@
-local _instances = nil -- should not have visbility of each other...
+local _worlds = nil -- should not have visbility of each other...
 _DEBUG = false
 
 function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest", 0)
   -- Globals
   Vector = require("libs.vector")
+  Timer = require("libs.timer")
   _constants = require("src.constants")
   _util = require("libs.util")
   resources = require("libs.cargo").init("resources")
-  ECS =
-    require("libs.concord").init(
-    {
-      useEvents = false
-    }
-  )
-  Component = require("libs.concord.component")
-  Entity = require("libs.concord.entity")
-  Instance = require("libs.concord.instance")
-  System = require("libs.concord.system")
-  Timer = require("libs.timer")
+  Concord = require("libs.concord")
 
-  _components = require("src.components")
-  _entities = require("src.entities")
-  _systems = require("src.systems")
-  _instances = require("src.instances")
+  _components = Concord.components
+  _systems = Concord.systems
+  _worlds = Concord.worlds
+  _assemblages = Concord.assemblages
+
+  Concord.loadComponents({"src.components.transform", "src.components.controlled"})
+  Concord.loadSystems({"src.systems.motion", "src.systems.input"})
+  Concord.loadWorlds({"src.worlds.game"})
+  -- Concord.loadAssemblages({})
 end
 
 function love.update(dt)
-  _instances.world:emit("update", dt)
+  _worlds.game:emit("update", dt)
 end
 
 welcome_text = love.graphics.newText(love.graphics.getFont(), "Time to make a game...")
@@ -39,7 +35,7 @@ function love.draw()
     love.graphics.getHeight() / 2 - welcome_text:getHeight() / 2
   )
 
-  _instances.world:emit("draw")
+  _worlds.game:emit("draw")
 end
 
 function love.keypressed(key, _, _)
@@ -51,21 +47,21 @@ function love.keypressed(key, _, _)
     _DEBUG = not _DEBUG
   end
 
-  _instances.world:emit("keypressed", key)
+  _worlds.game:emit("keypressed", key)
 end
 
 function love.keyreleased(key)
-  _instances.world:emit("keyreleased", key)
+  _worlds.game:emit("keyreleased", key)
 end
 
 function love.mousepressed(x, y, button, _, _)
-  _instances.world:emit("mousepressed", x, y, button)
+  _worlds.game:emit("mousepressed", x, y, button)
 end
 
 function love.mousereleased(x, y, button, _, _)
-  _instances.world:emit("mousereleased", x, y, button)
+  _worlds.game:emit("mousereleased", x, y, button)
 end
 
 function love.resize(w, h)
-  _instances.world:emit("resize", w, h)
+  _worlds.world:emit("resize", w, h)
 end

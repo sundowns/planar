@@ -1,5 +1,5 @@
 local controls =
-  Component(
+  Concord.component(
   function(e, binds)
     e.binds = binds or {}
     e.is_held = {}

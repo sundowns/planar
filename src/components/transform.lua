@@ -1,5 +1,5 @@
 local transform =
-  Component(
+  Concord.component(
   function(e, position, velocity)
     assert(position and position.x and position.y, "Transform component received a non-vector position on creation")
     assert(velocity and velocity.x and velocity.y, "Transform component received a non-vector velocity on creation")

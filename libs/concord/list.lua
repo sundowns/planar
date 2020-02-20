@@ -1,78 +1,101 @@
---- List
+--- Data structure that allows for fast removal at the cost of containing order.
+-- @classmod List
 
 local List = {}
-local mt = {__index = List}
+List.__mt = {
+   __index = List
+}
 
 --- Creates a new List.
--- @return A new list
+-- @treturn List A new List
 function List.new()
    return setmetatable({
-      objects  = {},
-      pointers = {},
-      size     = 0,
-   }, mt)
-end
-
---- Clears the List completely.
--- @return self
-function List:clear()
-   self.objects  = {}
-   self.pointers = {}
-   self.size     = 0
-
-   return self
+      size = 0,
+   }, List.__mt)
 end
 
 --- Adds an object to the List.
--- @param obj The object to add
--- @return self
-function List:add(obj)
+-- Object must be of reference type
+-- Object may not be the string 'size'
+-- @param obj Object to add
+-- @treturn List self
+function List:__add(obj)
    local size = self.size + 1
 
-   self.objects[size] = obj
-   self.pointers[obj] = size
-   self.size          = size
+   self[size] = obj
+   self[obj]  = size
+   self.size  = size
 
    return self
 end
 
 --- Removes an object from the List.
--- @param obj The object to remove
--- @return self
-function List:remove(obj)
-   local index = self.pointers[obj]
-   if not index then return end 
+-- @param obj Object to remove
+-- @treturn List self
+function List:__remove(obj)
+   local index = self[obj]
+   if not index then return end
    local size  = self.size
-   
+
    if index == size then
-      self.objects[size] = nil
+      self[size] = nil
    else
-      local other = self.objects[size]
+      local other = self[size]
 
-      self.objects[index]  = other
-      self.pointers[other] = index
+      self[index] = other
+      self[other] = index
 
-      self.objects[size] = nil
+      self[size] = nil
    end
 
-   self.pointers[obj] = nil
+   self[obj] = nil
    self.size = size - 1
+
+   return self
 end
 
---- Gets an object by numerical index.
--- @param index The index to look at
--- @return The object at the index
-function List:get(index)
-   return self.objects[index]
+--- Clears the List completely.
+-- @treturn List self
+function List:__clear()
+   for i = 1, self.size do
+      local o = self[i]
+
+      self[o] = nil
+      self[i] = nil
+   end
+
+   self.size = 0
+
+   return self
 end
 
---- Gets if the List has the object.
--- @param obj The object to search for
--- true if the list has the object, false otherwise
+--- Returns true if the List has the object.
+-- @param obj Object to check for
+-- @treturn boolean
 function List:has(obj)
-   return self.pointers[obj] and true
+   return self[obj] and true or false
+end
+
+--- Returns the object at an index.
+-- @number i Index to get from
+-- @return Object at the index
+function List:get(i)
+   return self[i]
+end
+
+--- Returns the index of an object in the List.
+-- @param obj Object to get index of
+-- @treturn number index of object in the List.
+function List:indexOf(obj)
+   if (not self[obj]) then
+      error("bad argument #1 to 'List:indexOf' (Object was not in List)", 2)
+   end
+
+   return self[obj]
 end
 
 return setmetatable(List, {
-   __call = function() return List.new() end,
+   __call = function()
+      return List.new()
+   end,
 })

@@ -1,5 +1,5 @@
 function love.conf(t)
-    local game_title = "Love2D ECS Game Template"
+    local game_title = "LoveJam 2020"
 
     t.window.title = game_title
     t.window.minwidth = 1280
@@ -14,7 +14,7 @@ function love.conf(t)
         version = "0.1", -- The project version
         author = "Tom Smallridge", -- Your name (string)
         email = "tom@smallridge.com.au", -- Your email (string)
-        description = "Love2D Game Template", -- The project description (string)
+        description = "Grim Gamers LoveJam 2020", -- The project description (string)
         homepage = "https://example.com", -- The project homepage (string)
         identifier = "grim.gamers", -- The project Uniform Type Identifier (string)
         excludeFileList = {

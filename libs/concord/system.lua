@@ -1,184 +1,215 @@
---- System
+--- Iterates over Entities. From these Entities its get Components and modify them.
+-- A System contains 1 or more Pools.
+-- A System is contained by 1 World.
+-- @classmod System
 
 local PATH = (...):gsub('%.[^%.]+$', '')
 
-local Component = require(PATH..".component")
-local Pool      = require(PATH..".pool")
+local Pool  = require(PATH..".pool")
+local Utils = require(PATH..".utils")
 
-local System = {}
-System.mt    = {
+local System = {
+   ENABLE_OPTIMIZATION = true,
+}
+
+System.mt = {
    __index = System,
-   __call  = function(systemProto, ...)
+   __call  = function(systemClass, world)
       local system = setmetatable({
-         __all      = {},
-         __pools    = {},
-         __instance = nil,
+         __enabled = true,
+
+         __pools = {},
+         __world = world,
 
          __isSystem = true,
-      }, systemProto)
+         __isSystemClass = false, -- Overwrite value from systemClass
+      }, systemClass)
 
-      for _, filter in pairs(systemProto.__filter) do
-         local pool = system:__buildPool(filter)
-         if not system[pool.name] then
-            system[pool.name]                   = pool
+      -- Optimization: We deep copy the World class into our instance of a world.
+      -- This grants slightly faster access times at the cost of memory.
+      -- Since there (generally) won't be many instances of worlds this is a worthwhile tradeoff
+      if (System.ENABLE_OPTIMIZATION) then
+         Utils.shallowCopy(systemClass, system)
+      end
+
+      for _, filter in pairs(systemClass.__filter) do
+         local pool = system.__buildPool(filter)
+         if not system[pool.__name] then
+            system[pool.__name]                 = pool
             system.__pools[#system.__pools + 1] = pool
          else
             error("Pool with name '"..pool.name.."' already exists.")
          end
       end
 
-      system:init(...)
+      system:init(world)
+
       return system
    end,
 }
 
---- Creates a new System prototype.
+--- Creates a new SystemClass.
 -- @param ... Variable amounts of filters
--- @return A new System prototype
+-- @treturn System A new SystemClass
 function System.new(...)
-   local systemProto = setmetatable({
+   local systemClass = setmetatable({
       __filter = {...},
-   }, System.mt)
-   systemProto.__index = systemProto
 
-   return systemProto
+      __name          = nil,
+      __isSystemClass = true,
+   }, System.mt)
+   systemClass.__index = systemClass
+
+   -- Optimization: We deep copy the World class into our instance of a world.
+   -- This grants slightly faster access times at the cost of memory.
+   -- Since there (generally) won't be many instances of worlds this is a worthwhile tradeoff
+   if (System.ENABLE_OPTIMIZATION) then
+      Utils.shallowCopy(System, systemClass)
+   end
+
+   return systemClass
 end
 
---- Builds a Pool for the System.
+-- Internal: Builds a Pool for the System.
 -- @param baseFilter The 'raw' Filter
 -- @return A new Pool
-function System:__buildPool(baseFilter)
+function System.__buildPool(baseFilter)
    local name   = "pool"
    local filter = {}
 
-   for i, v in ipairs(baseFilter) do
-      if type(v) == "table" then
-         filter[#filter + 1] = v
-      elseif type(v) == "string" then
-         name = v
+   for _, value in ipairs(baseFilter) do
+      if type(value) == "table" then
+         filter[#filter + 1] = value
+      elseif type(value) == "string" then
+         name = value
       end
    end
 
    return Pool(name, filter)
 end
 
---- Checks and applies an Entity to the System's pools.
+-- Internal: Evaluates an Entity for all the System's Pools.
 -- @param e The Entity to check
--- @return True if the Entity was added, false if it was removed. Nil if nothing happend
-function System:__check(e)
-   local systemHas = self:__has(e)
-
+-- @treturn System self
+function System:__evaluate(e)
    for _, pool in ipairs(self.__pools) do
-      local poolHas  = pool:has(e)
-      local eligible = pool:eligible(e)
+      local has  = pool:has(e)
+      local eligible = pool:__eligible(e)
 
-      if not poolHas and eligible then
-         pool:add(e)
-         self:entityAddedTo(e, pool)
-         self:__tryAdd(e)
-      elseif poolHas and not eligible then
-         pool:remove(e)
-         self:entityRemovedFrom(e, pool)
-         self:__tryRemove(e)
+      if not has and eligible then
+         pool:__add(e)
+      elseif has and not eligible then
+         pool:__remove(e)
       end
    end
+
+   return self
 end
 
---- Removed an Entity from the System.
+-- Internal: Removes an Entity from the System.
 -- @param e The Entity to remove
+-- @treturn System self
 function System:__remove(e)
-   if self:__has(e) then
-      for _, pool in ipairs(self.__pools) do
-         if pool:has(e) then
-            pool:remove(e)
-            self:entityRemovedFrom(e, pool)
-         end
-      end
-
-      self.__all[e] = nil
-      self:entityRemoved(e)
-   end
-end
-
---- Tries to add an Entity to the System.
--- @param e The Entity to add
-function System:__tryAdd(e)
-   if not self:__has(e) then
-      self.__all[e] = 0
-      self:entityAdded(e)
-   end
-
-   self.__all[e] = self.__all[e] + 1
-end
-
---- Tries to remove an Entity from the System.
--- @param e The Entity to remove
-function System:__tryRemove(e)
-   if self:__has(e) then
-      self.__all[e] = self.__all[e] - 1
-
-      if self.__all[e] == 0 then
-         self.__all[e] = nil
-         self:entityRemoved(e)
+   for _, pool in ipairs(self.__pools) do
+      if pool:has(e) then
+         pool:__remove(e)
       end
    end
+
+   return self
 end
 
---- Returns the Instance the System is in.
--- @return The Instance
-function System:getInstance()
-   return self.__instance
+-- Internal: Clears all Entities from the System.
+-- @treturn System self
+function System:__clear()
+   for i = 1, #self.__pools do
+      self.__pools[i]:__clear()
+   end
+
+   return self
 end
 
---- Returns if the System has the Entity.
--- @param e The Entity to check for
--- @return True if the System has the Entity. False otherwise
-function System:__has(e)
-   return self.__all[e] and true
+--- Enables the System.
+-- @treturn System self
+function System:enable()
+   self:setEnabled(true)
+
+   return self
 end
 
---- Default callback for system initialization.
--- @param ... Varags
-function System:init(...)
+--- Disables the System.
+-- @treturn System self
+function System:disable()
+   self:setEnabled(false)
+
+   return self
 end
 
---- Default callback for adding an Entity.
--- @param e The Entity that was added
-function System:entityAdded(e)
+--- Toggles if the System is enabled.
+-- @treturn System self
+function System:toggleEnabled()
+   self:setEnabled(not self.__enabled)
+
+   return self
 end
 
---- Default callback for adding an Entity to a pool.
--- @param e The Entity that was added
--- @param pool The pool the Entity was added to
-function System:entityAddedTo(e, pool)
+--- Sets if the System is enabled
+-- @tparam boolean enable
+-- @treturn System self
+function System:setEnabled(enable)
+   if (not self.__enabled and enable) then
+      self.__enabled = true
+      self:onEnabled()
+   elseif (self.__enabled and not enable) then
+      self.__enabled = false
+      self:onDisabled()
+   end
+
+   return self
 end
 
---- Default callback for removing an Entity.
--- @param e The Entity that was removed
-function System:entityRemoved(e)
+--- Returns is the System is enabled
+-- @treturn boolean
+function System:isEnabled()
+   return self.__enabled
 end
 
---- Default callback for removing an Entity from a pool.
--- @param e The Entity that was removed
--- @param pool The pool the Entity was removed from
-function System:entityRemovedFrom(e, pool)
+--- Returns the World the System is in.
+-- @treturn World
+function System:getWorld()
+   return self.__world
 end
 
--- Default callback for when the System is added to an Instance.
--- @param instance The Instance the System was added to
-function System:addedTo(instance)
+--- Returns true if the System has a name.
+-- @treturn boolean
+function System:hasName()
+   return self.__name and true or false
 end
 
--- Default callback for when a System's callback is enabled.
--- @param callbackName The name of the callback that was enabled 
-function System:enabledCallback(callbackName)
+--- Returns the name of the System.
+-- @treturn string
+function System:getName()
+   return self.__name
 end
 
--- Default callback for when a System's callback is disabled.
--- @param callbackName The name of the callback that was disabled 
-function System:disabledCallback(callbackName)
+--- Callbacks
+-- @section Callbacks
+
+--- Callback for system initialization.
+-- @tparam World world The World the System was added to
+function System:init(world) -- luacheck: ignore
+end
+
+--- Callback for when a System is enabled.
+function System:onEnabled() -- luacheck: ignore
+end
+
+--- Callback for when a System is disabled.
+function System:onDisabled() -- luacheck: ignore
 end
 
 return setmetatable(System, {
-   __call = function(_, ...) return System.new(...) end,
+   __call = function(_, ...)
+      return System.new(...)
+   end,
 })

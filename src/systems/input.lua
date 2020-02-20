@@ -1,5 +1,4 @@
-local input = System({_components.controlled})
-
+local input = Concord.system({_components.controlled})
 function input:init()
   self.timer = Timer.new()
   self.polling_rate = 0.01
@@ -10,7 +9,6 @@ function input:init()
     end
   )
 end
-
 function input:poll_keys()
   for i = 1, self.pool.size do
     local controlled = self.pool:get(i):get(_components.controlled)
@@ -21,7 +19,6 @@ function input:poll_keys()
     end
   end
 end
-
 function input:keypressed(key)
   for i = 1, self.pool.size do
     local controlled = self.pool:get(i):get(_components.controlled)
@@ -32,17 +29,14 @@ function input:keypressed(key)
     end
   end
 end
-
 function input:mousepressed(_, _, button)
   -- We dont care about x, y we just want to track the event (just poll the mouse position if needed)
   self:keypressed("mouse" .. button)
 end
-
 function input:mousereleased(_, _, button)
   -- We dont care about x, y we just want to track the event (just poll the mouse position if needed)
   self:keyreleased("mouse" .. button)
 end
-
 function input:keyreleased(key)
   for i = 1, self.pool.size do
     local controlled = self.pool:get(i):get(_components.controlled)
@@ -53,9 +47,7 @@ function input:keyreleased(key)
     end
   end
 end
-
 function input:update(dt)
   self.timer:update(dt)
 end
-
 return input
