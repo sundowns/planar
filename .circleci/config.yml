@@ -1,0 +1,105 @@
+# Use the latest 2.1 version of CircleCI pipeline processing engine, see https://circleci.com/docs/2.0/configuration-reference/
+version: 2.1
+
+# # Use a package of configuration called an orb, see https://circleci.com/docs/2.0/orb-intro/
+# orbs:
+#   # Declare a dependency on the welcome-orb
+#   welcome: circleci/welcome-orb@0.3.1
+
+executors:
+  ubuntu:
+    machine:
+      image: ubuntu-1604:201903-01
+
+commands:
+  install_lua:
+    description: "Installs lua"
+    steps:
+      - run:
+          name: "Install Lua"
+          command: |
+            sudo apt-get update
+            sudo apt install lua5.3
+            sudo apt-get install liblua5.3-dev
+
+  install_luarocks:
+    description: "Installs luarocks"
+    steps:
+      - run:
+          name: "Install luarocks"
+          command: |
+            sudo apt-get update
+            sudo apt install build-essential libreadline-dev
+            mkdir tmp && cd tmp
+            wget https://luarocks.org/releases/luarocks-3.1.3.tar.gz
+            tar zxpf luarocks-3.1.3.tar.gz
+            cd luarocks-3.1.3
+            ./configure
+            make build
+            sudo make install
+
+  build_binaries:
+    description: "Build and save binary distributable"
+    steps:
+      - run:
+          name: "Install love"
+          command: |
+            sudo add-apt-repository ppa:bartbes/love-stable
+            sudo apt-get update
+            sudo apt-get install love
+            love --version
+      - run:
+          name: "Install love-release"
+          command: |
+            sudo apt-get update
+            sudo apt-get install libzip-dev
+            sudo luarocks install love-release
+      - run:
+          name: "Build releases"
+          command: |
+            pwd
+            love-release -M -D -W 32
+      - store_artifacts:
+          path: dist
+          destination: builds
+
+  build_love:
+    description: "zip directory contents and rename to .love"
+    steps:
+      - run:
+          name: "build .love"
+          command: |
+            mkdir dist
+            cp src -r dist
+            cp libs -r dist
+            cp resources -r dist
+            cp main.lua dist
+            cp conf.lua dist
+            cd dist
+            zip -9 -r game.love .
+      - store_artifacts:
+          path: dist/game.love
+          destination: builds/game.love
+jobs:
+  build_binaries:
+    executor: ubuntu
+    steps:
+      - checkout
+      - install_lua
+      - install_luarocks
+      - build_binaries
+  build_love:
+    executor: ubuntu
+    steps:
+      - checkout
+      - build_love
+
+# Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
+workflows:
+  build:
+    jobs:
+      - build_love:
+      - build_binaries:
+          filters:
+            branches:
+              only: master
