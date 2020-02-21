@@ -24,11 +24,11 @@ function renderer:draw()
     local phase = e:get(_components.phase)
 
     if phase then
-      if self.current_phase == phase then
+      if self.current_phase ~= phase.current then
         draw_mode = "line"
       end
 
-      love.graphics.setColor(self.colours[self.current_phase])
+      love.graphics.setColor(self.colours[phase.current])
     end
 
     love.graphics.polygon(draw_mode, polygon:calculate_world_vertices(position))

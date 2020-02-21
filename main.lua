@@ -3,7 +3,6 @@ _DEBUG = false
 
 function love.load()
   -- love.graphics.setDefaultFilter("nearest", "nearest", 0)
-  -- Globals
   Vector = require("libs.vector")
   Timer = require("libs.timer")
   _constants = require("src.constants")
@@ -22,8 +21,12 @@ function love.load()
   Concord.loadAssemblages("src/assemblages")
 
   -- Assemble the player entity
-  _assemblages.player:assemble(Concord.entity(_worlds.game), Vector(50, 50))
+  _assemblages.player:assemble(
+    Concord.entity(_worlds.game),
+    Vector(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
+  )
   _worlds.game:emit("trigger_phase_shift")
+  _worlds.game:emit("begin_wave")
 end
 
 function love.update(dt)
