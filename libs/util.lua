@@ -270,6 +270,10 @@ function util.love.resetColour()
   love.graphics.setColor(1, 1, 1, 1)
 end
 
+function util.love.resetColor()
+  love.graphics.setColor(1, 1, 1, 1)
+end
+
 function util.love.renderStats(x, y)
   if not x then
     x = 0

@@ -1,9 +1,8 @@
 local _worlds = nil -- should not have visbility of each other...
 _DEBUG = false
-_PHASES = {"RED", "BLUE"}
 
 function love.load()
-  love.graphics.setDefaultFilter("nearest", "nearest", 0)
+  -- love.graphics.setDefaultFilter("nearest", "nearest", 0)
   -- Globals
   Vector = require("libs.vector")
   Timer = require("libs.timer")
@@ -23,14 +22,14 @@ function love.load()
   Concord.loadAssemblages("src/assemblages")
 
   -- Assemble the player entity
-  _assemblages.player:assemble(Concord.entity(_worlds.game), Vector(50, 50), _PHASES)
+  _assemblages.player:assemble(Concord.entity(_worlds.game), Vector(50, 50))
+  _worlds.game:emit("trigger_phase_shift")
 end
 
 function love.update(dt)
   _worlds.game:emit("update", dt)
 end
 
-welcome_text = love.graphics.newText(love.graphics.getFont(), "Time to make a game...")
 function love.draw()
   _worlds.game:emit("draw")
 end
@@ -42,6 +41,8 @@ function love.keypressed(key, _, _)
     love.event.quit()
   elseif key == "f1" then
     _DEBUG = not _DEBUG
+  elseif key == "space" then
+    _worlds.game:emit("trigger_phase_shift")
   end
 
   _worlds.game:emit("keypressed", key)
