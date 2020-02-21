@@ -98,7 +98,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - build_love:
+      - build_love
       - build_binaries:
           filters:
             branches:
