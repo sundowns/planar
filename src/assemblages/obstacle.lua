@@ -1,7 +1,7 @@
 -- e is the Entity being assembled.
 -- cuteness and legs are variables passed in
 
-local VALID_SHAPES = {["RECTANGLE"] = true, ["TRIANGLE"] = true, ["SQUARE"] = true}
+local VALID_SHAPES = {["TRIANGLE"] = true, ["SQUARE"] = true}
 
 function get_shape_vertices(shape, scale, rotation)
   local units = 10
@@ -10,7 +10,7 @@ function get_shape_vertices(shape, scale, rotation)
   if shape == "TRIANGLE" then
     vertices = {
       Vector(-units, -units),
-      Vector(0, units),
+      Vector(0, units / 2),
       Vector(units, -units)
     }
   elseif shape == "SQUARE" then
@@ -24,9 +24,7 @@ function get_shape_vertices(shape, scale, rotation)
 
   -- apply initial rotation
   for i, vertex in ipairs(vertices) do
-    local s = math.sin(rotation)
-    local c = math.cos(rotation)
-    vertices[i] = Vector(vertex.x * c - vertex.y * s, vertex.x * s + vertex.y * c)
+    vertices[i] = Vector(_util.m.rotatePointAroundOrigin(vertex.x, vertex.y, rotation))
   end
 
   return vertices
