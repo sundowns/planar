@@ -3,31 +3,44 @@
 
 local VALID_SHAPES = {["RECTANGLE"] = true, ["TRIANGLE"] = true, ["SQUARE"] = true}
 
-function get_shape_vertices(shape)
+function get_shape_vertices(shape, scale, rotation)
+  local units = 10
+  units = units * scale
+  local vertices = {}
   if shape == "TRIANGLE" then
-    return {
-      Vector(-10, -10),
-      Vector(0, 10),
-      Vector(10, -10)
+    vertices = {
+      Vector(-units, -units),
+      Vector(0, units),
+      Vector(units, -units)
     }
   elseif shape == "SQUARE" then
-    return {
-      Vector(-10, -10),
-      Vector(10, -10),
-      Vector(10, 10),
-      Vector(-10, 10)
+    vertices = {
+      Vector(-units, -units),
+      Vector(units, -units),
+      Vector(units, units),
+      Vector(-units, units)
     }
   end
+
+  -- apply initial rotation
+  for i, vertex in ipairs(vertices) do
+    local s = math.sin(rotation)
+    local c = math.cos(rotation)
+    vertices[i] = Vector(vertex.x * c - vertex.y * s, vertex.x * s + vertex.y * c)
+  end
+
+  return vertices
 end
 
 return Concord.assemblage(
-  function(e, origin, velocity, phase, shape)
+  function(e, origin, velocity, phase, shape, scale, rotation)
     assert(phase == "RED" or phase == "BLUE", "received invalid phase to obstacle assemblage: " .. phase)
     assert(VALID_SHAPES[shape], "received invalid shape to obstacle assemblage: " .. shape)
+    local scale = scale or 1
     local velocity = velocity or Vector(0, 0)
-
-    local vertex_offsets = get_shape_vertices(shape)
-    e:give(_components.transform, origin, velocity):give(_components.polygon, vertex_offsets):give(
+    local vertex_offsets = get_shape_vertices(shape, scale, rotation or 0)
+    -- we pass 0 rotation to transform component because it has no concept of the original rotation of the polygon
+    e:give(_components.transform, origin, velocity, 0):give(_components.polygon, vertex_offsets):give(
       _components.phase,
       false,
       phase
