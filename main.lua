@@ -1,5 +1,6 @@
 local _worlds = nil -- should not have visbility of each other...
 _DEBUG = false
+_PHASES = {"RED", "BLUE"}
 
 function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest", 0)
@@ -16,10 +17,13 @@ function love.load()
   _worlds = Concord.worlds
   _assemblages = Concord.assemblages
 
-  Concord.loadComponents({"src.components.transform", "src.components.controlled"})
-  Concord.loadSystems({"src.systems.motion", "src.systems.input"})
-  Concord.loadWorlds({"src.worlds.game"})
-  -- Concord.loadAssemblages({})
+  Concord.loadComponents("src/components")
+  Concord.loadSystems("src/systems")
+  Concord.loadWorlds("src/worlds")
+  Concord.loadAssemblages("src/assemblages")
+
+  -- Assemble the player entity
+  _assemblages.player:assemble(Concord.entity(_worlds.game), Vector(50, 50), _PHASES)
 end
 
 function love.update(dt)
@@ -28,13 +32,6 @@ end
 
 welcome_text = love.graphics.newText(love.graphics.getFont(), "Time to make a game...")
 function love.draw()
-  -- Draw filler text
-  love.graphics.draw(
-    welcome_text,
-    love.graphics.getWidth() / 2 - welcome_text:getWidth() / 2,
-    love.graphics.getHeight() / 2 - welcome_text:getHeight() / 2
-  )
-
   _worlds.game:emit("draw")
 end
 

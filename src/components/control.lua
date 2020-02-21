@@ -1,4 +1,4 @@
-local controls =
+local control =
   Concord.component(
   function(e, binds)
     e.binds = binds or {}
@@ -9,8 +9,8 @@ local controls =
   end
 )
 
-function controls:get(key)
+function control:get(key)
   return self.binds[key]
 end
 
-return controls
+return control
