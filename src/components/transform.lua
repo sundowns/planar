@@ -27,4 +27,28 @@ function transform:accelerate(dx, dy)
   self.velocity = Vector(self.velocity.x + dx, self.velocity.y + dy)
 end
 
+function transform:apply_friction(friction)
+  --vertical
+  if self.velocity.y > 0 then
+    self.velocity.y = self.velocity.y - friction
+  elseif self.velocity.y < 0 then
+    self.velocity.y = self.velocity.y + friction
+  end
+
+  if math.abs(self.velocity.y) < 2.5 then
+    self.velocity.y = 0
+  end
+
+  --horizontal
+  if self.velocity.x > 0 then
+    self.velocity.x = self.velocity.x - friction
+  elseif self.velocity.x < 0 then
+    self.velocity.x = self.velocity.x + friction
+  end
+
+  if math.abs(self.velocity.x) < 2.5 then
+    self.velocity.x = 0
+  end
+end
+
 return transform

@@ -22,7 +22,16 @@ function flight:update(dt)
     end
 
     local acceleration = direction * flight.acceleration * dt
+    local limit = _constants.PLAYER.MAX_SPEED
+    if math.abs(transform.velocity.x) > limit then
+      acceleration.x = 0
+    end
+    if math.abs(transform.velocity.y) > limit then
+      acceleration.y = 0
+    end
     transform:accelerate(acceleration.x, acceleration.y)
+    transform:apply_friction(_constants.PLAYER.FRICTION)
+    print(transform.velocity.x .. " / " .. transform.velocity.y)
   end
 end
 
