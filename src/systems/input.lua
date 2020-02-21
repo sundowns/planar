@@ -14,7 +14,7 @@ function input:poll_keys()
     local control = self.pool:get(i):get(_components.control)
     for action, is_held in pairs(control.is_held) do
       if is_held then
-        self:getInstance():emit("action_held", action, self.pool:get(i))
+        self:getWorld():emit("action_held", action, self.pool:get(i))
       end
     end
   end
@@ -25,7 +25,7 @@ function input:keypressed(key)
     local binds = control.binds
     if binds[key] and not control.is_held[key] then
       control.is_held[binds[key]] = true
-      self:getInstance():emit("action_pressed", binds[key], self.pool:get(i))
+      self:getWorld():emit("action_pressed", string.lower(binds[key]), self.pool:get(i))
     end
   end
 end
@@ -43,7 +43,7 @@ function input:keyreleased(key)
     local binds = control.binds
     if binds[key] and control.is_held[binds[key]] then
       control.is_held[binds[key]] = false
-      self:getInstance():emit("action_released", binds[key], self.pool:get(i))
+      self:getWorld():emit("action_released", string.lower(binds[key]), self.pool:get(i))
     end
   end
 end
