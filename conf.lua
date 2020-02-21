@@ -2,7 +2,7 @@ function love.conf(t)
     local game_title = "LoveJam 2020"
 
     t.window.title = game_title
-    t.window.minwidth = 1280
+    t.window.minwidth = 720 -- 1280 for 16:9
     t.window.minheight = 720
     t.console = true
     t.window.fullscreen = false

@@ -10,7 +10,7 @@ function get_shape_vertices(shape, scale, rotation)
   if shape == "TRIANGLE" then
     vertices = {
       Vector(-units, -units),
-      Vector(0, units / 2),
+      Vector(0, units / math.sqrt(3)),
       Vector(units, -units)
     }
   elseif shape == "SQUARE" then

@@ -14,6 +14,7 @@ function renderer:phase_update(new_phase)
 end
 
 function renderer:draw()
+  love.graphics.setLineWidth(2)
   for i = 1, self.pool.size do
     local e = self.pool:get(i)
     local transform = e:get(_components.transform)
@@ -35,5 +36,9 @@ function renderer:draw()
 
     _util.l.resetColour()
   end
+
+  love.graphics.setLineWidth(1)
+  -- TODO: use multiple pools to draw the player manually last (on top of shapes)
 end
+
 return renderer
