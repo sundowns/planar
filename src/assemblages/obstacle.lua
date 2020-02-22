@@ -8,10 +8,11 @@ function get_shape_vertices(shape, scale, rotation)
   units = units * scale
   local vertices = {}
   if shape == "TRIANGLE" then
+    -- https://math.stackexchange.com/a/1344707
     vertices = {
-      Vector(-units, -units),
-      Vector(0, units / math.sqrt(3)),
-      Vector(units, -units)
+      Vector(0, math.sqrt(3) / 3 * units),
+      Vector(-units / 2, -math.sqrt(3) / 6 * units),
+      Vector(units / 2, -math.sqrt(3) / 6 * units)
     }
   elseif shape == "SQUARE" then
     vertices = {

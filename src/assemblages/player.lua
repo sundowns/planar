@@ -2,11 +2,11 @@
 -- cuteness and legs are variables passed in
 return Concord.assemblage(
   function(e, origin)
-    local units = 10
+    local units = 20
     vertex_offsets = {
-      Vector(-units, -units),
-      Vector(0, units / math.sqrt(3)),
-      Vector(units, -units)
+      Vector(0, math.sqrt(3) / 3 * units),
+      Vector(-units / 2, -math.sqrt(3) / 6 * units),
+      Vector(units / 2, -math.sqrt(3) / 6 * units)
     }
     local PLAYER_ACCELERATION = 360
     local bindings = {
