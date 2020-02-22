@@ -7,7 +7,9 @@ function renderer:init()
     ["RED"] = {1, 0, 0},
     ["BLUE"] = {0, 0, 1}
   }
-  self.final_score = 0
+  self.final_score_text = nil
+  self.game_over = false
+  self.game_over_text = love.graphics.newText(love.graphics.getFont(), "GAME OVER")
 end
 
 function renderer:player_collided()
@@ -15,7 +17,8 @@ function renderer:player_collided()
 end
 
 function renderer:display_final_score(final)
-  self.final_score = final
+  self.game_over = true
+  self.final_score_text = love.graphics.newText(love.graphics.getFont(), "Final score: " .. final)
 end
 
 function renderer:phase_update(new_phase)
@@ -73,15 +76,19 @@ function renderer:draw()
   love.graphics.setLineWidth(1)
 
   -- final score display
-  if self.final_score > 0 then
+  if self.game_over then
     love.graphics.setColor(1, 1, 0, 1)
-    love.graphics.print(
-      "GAME OVER",
-      _constants.SCORE.X_FINAL,
-      _constants.SCORE.Y_FINAL - (love.graphics.getHeight() / 32)
+    love.graphics.draw(
+      self.game_over_text,
+      love.graphics.getWidth() / 2 - self.game_over_text:getWidth() / 2,
+      love.graphics.getHeight() / 2 - self.game_over_text:getHeight() - self.final_score_text:getHeight()
     )
     love.graphics.setColor(0, 1, 0, 1)
-    love.graphics.print("Final score: " .. self.final_score, _constants.SCORE.X_FINAL, _constants.SCORE.Y_FINAL)
+    love.graphics.draw(
+      self.final_score_text,
+      love.graphics.getWidth() / 2 - self.final_score_text:getWidth() / 2,
+      love.graphics.getHeight() / 2 - self.final_score_text:getHeight() / 2
+    )
   end
 end
 

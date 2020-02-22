@@ -2,14 +2,12 @@ local score = Concord.system()
 
 function score:init()
     self.current = _constants.SCORE.START
-    self.increment = _constants.SCORE.INCREMENT
+    self.score_increment = _constants.SCORE.INCREMENT
     self.timer = Timer.new()
     self.timer:every(
         2,
         function()
-            for i = 1, self.increment do -- use a for loop for nicer looking increase
-                self.current = self.current + 1
-            end
+            self:increment(self.score_increment)
         end
     )
 end
@@ -19,8 +17,8 @@ function score:player_collided()
     self:disable()
 end
 
-function score:increment(points)
-    self.current = self.current + points
+function score:increment(delta_points)
+    self.current = self.current + delta_points
 end
 
 function score:update(dt)
