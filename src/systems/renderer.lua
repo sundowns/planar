@@ -83,6 +83,8 @@ function renderer:draw_phased_polygon(e)
 end
 
 function renderer:draw()
+  _util.l.resetColour()
+
   if self.shake_screen then
     love.graphics.push()
     local dx = love.math.random(-self.shake_magnitude, self.shake_magnitude)

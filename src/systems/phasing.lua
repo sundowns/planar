@@ -9,9 +9,7 @@ function phasing:init()
   self.canPhase = true
   self.timer = Timer.new()
   self.sfx = love.audio.newSource("resources/audio/phaseshift2.wav", "static")
-
-  -- https://github.com/vrld/moonshine
-  self.ripple_shader = moonshine(moonshine.effects.chromasep)
+  self.ambience = love.audio.newSource("resources/audio/ambience.wav", "static")
 
   self.pool.onEntityAdded = function(pool, e)
     local entity_phase = e:get(_components.phase)
@@ -62,9 +60,14 @@ function phasing:attempt_phase_shift()
       if charge.current_charge >= 1 and self.canPhase then
         charge.current_charge = charge.current_charge - 1
         self.canPhase = false
+        local rng = math.random(1, 8)
+        print(rng)
         self.timer:after(
           0.5,
           function()
+            if rng == 1 then
+              love.audio.play(self.ambience)
+            end
             self.canPhase = true
           end
         )
@@ -116,11 +119,9 @@ function phasing:draw(dt)
       blue = self.ripple_transparency
     end
     love.graphics.setColor(red, 0, blue, self.ripple_transparency)
-    self.ripple_shader(
-      function()
-        love.graphics.circle("fill", self.ripple_origin.x, self.ripple_origin.y, self.ripple_radius)
-      end
-    )
+    love.graphics.circle("fill", self.ripple_origin.x, self.ripple_origin.y, self.ripple_radius)
+
+    _util.l.resetColour()
   end
 end
 
