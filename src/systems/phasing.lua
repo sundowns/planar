@@ -3,6 +3,9 @@ local phasing = Concord.system({_components.phase})
 function phasing:init()
   self.phases = {"RED", "BLUE"}
   self.current_phase_index = 1
+  self.ripple_radius = 0
+  self.ripple_origin = Vector(0, 0)
+  self.ripple_transparency = 0
 end
 
 function phasing:entityAdded(e)
@@ -15,6 +18,7 @@ end
 function phasing:update(dt)
   for i = 1, self.pool.size do
     local e = self.pool:get(i)
+    -- Charge
     local maximum = _constants.PLAYER.MAX_CHARGE
     if e:has(_components.charge) then
       local charge = e:get(_components.charge)
@@ -24,6 +28,17 @@ function phasing:update(dt)
           charge.current_charge = maximum
         end
       end
+    end
+  end
+
+  -- Ripple
+  if self.ripple_radius > 0 then
+    if love.graphics.getWidth() > self.ripple_radius and self.ripple_transparency > 0 then
+      self.ripple_radius = self.ripple_radius + (600 * dt)
+      self.ripple_transparency = self.ripple_transparency - (0.8 * dt)
+    else --disperse the ripple
+      self.ripple_radius = 0
+      self.ripple_transparency = 0
     end
   end
 end
@@ -48,13 +63,36 @@ function phasing:trigger_phase_shift()
     self.current_phase_index = 1
   end
   for i = 1, self.pool.size do
-    local phase = self.pool:get(i):get(_components.phase)
+    local e = self.pool:get(i)
+    local phase = e:get(_components.phase)
     if phase.follow_world_phase then
       phase:set(self.phases[self.current_phase_index])
+    end
+    if e:has(_components.control) then
+      self:ripple(e)
     end
   end
 
   self:getWorld():emit("phase_update", self.phases[self.current_phase_index])
+end
+
+function phasing:ripple(entity)
+  local transform = entity:get(_components.transform)
+  local position = transform.position
+  self.ripple_origin = position
+  self.ripple_transparency = 0.75
+  self.ripple_radius = 0.1
+end
+
+function phasing:draw(dt)
+  if self.ripple_radius > 0 then
+    if self.current_phase_index == 1 then
+      love.graphics.setColor(self.ripple_transparency, 0, 0, self.ripple_transparency)
+    else
+      love.graphics.setColor(0, 0, self.ripple_transparency, self.ripple_transparency)
+    end
+    love.graphics.circle("fill", self.ripple_origin.x, self.ripple_origin.y, self.ripple_radius)
+  end
 end
 
 function phasing:draw_ui(dt)
