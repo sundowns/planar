@@ -20,15 +20,13 @@ function motion:update(dt)
       table.insert(to_remove, e)
     end
   end
-
-function motion:player_collided()
-  self:disable()
-end
-
-function motion:onEntityAdded(e)
   for i, entity in ipairs(to_remove) do
     self:getWorld():removeEntity(entity)
   end
+end
+
+function motion:player_collided()
+  self:disable()
 end
 
 function motion:enforce_boundaries(transform)

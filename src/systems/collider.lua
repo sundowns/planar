@@ -8,13 +8,6 @@ function collider:init()
   self.current_phase = nil
   self.collision_worlds = {}
 
-function collider:player_collided()
-  self:disable()
-end
-
-function collider:onEntityAdded(e)
-  -- check if entity has a phase component:
-  if e:has(_components.phase) then
   self.pool.onEntityRemoved = function(pool, e)
     local phase = e:get(_components.phase)
     if phase then
@@ -46,6 +39,10 @@ function collider:onEntityAdded(e)
       -- add it to the neutral world?
     end
   end
+end
+
+function collider:player_collided()
+  self:disable()
 end
 
 function collider:set_collision_world(phase, collision_world)
