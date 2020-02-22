@@ -23,6 +23,8 @@ function flight:update(dt)
 
     local acceleration = direction * flight.acceleration * dt
     transform:accelerate(acceleration.x, acceleration.y)
+    transform:apply_friction(_constants.PLAYER.FRICTION, dt)
+    transform:limit_speed(_constants.PLAYER.MAX_SPEED)
   end
 end
 

@@ -27,4 +27,21 @@ function transform:accelerate(dx, dy)
   self.velocity = Vector(self.velocity.x + dx, self.velocity.y + dy)
 end
 
+function transform:apply_friction(friction, dt)
+  if self.velocity:len() > 0 then
+    self.velocity = self.velocity - self.velocity:normalized() * (self.velocity:len() * friction * dt)
+    if self.velocity:len() < 5 then
+      self.velocity = Vector(0, 0)
+    end
+  end
+end
+
+function transform:limit_speed(maxspeed)
+  local magnitude = self.velocity:len()
+  local direction = self.velocity:normalized()
+  if magnitude > maxspeed then
+    self.velocity = direction * maxspeed
+  end
+end
+
 return transform
