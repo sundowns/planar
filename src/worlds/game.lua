@@ -8,5 +8,6 @@ game:addSystem(_systems.flight)
 game:addSystem(_systems.phasing)
 game:addSystem(_systems.spawning)
 game:addSystem(_systems.collider)
+game:addSystem(_systems.score)
 
 return game
