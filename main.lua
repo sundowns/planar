@@ -34,7 +34,7 @@ function love.load()
     Vector(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
   )
   bgm:setLooping(true)
-  love.audio.play(bgm)
+  -- love.audio.play(bgm) -- TODO: not comment out
   _worlds.game:emit("attempt_phase_shift")
   _worlds.game:emit("begin_wave")
 end

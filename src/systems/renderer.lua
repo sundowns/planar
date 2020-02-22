@@ -5,8 +5,8 @@ local renderer =
 function renderer:init()
   self.current_phase = nil
   self.colours = {
-    ["RED"] = {1, 0, 0},
-    ["BLUE"] = {0, 0, 1}
+    ["RED"] = {220 / 255, 20 / 255, 60 / 255},
+    ["BLUE"] = {30 / 255, 144 / 255, 1}
   }
   self.final_score_text = nil
   self.game_over = false
@@ -18,6 +18,8 @@ function renderer:init()
   self.shake_magnitude = 2
   self.glow_effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.godsray)
   self.glow_effect.glow.strength = 2
+  self.glow_effect.godsray.exposure = 0.35
+  self.glow_effect.godsray.weight = 0.4
 end
 
 function renderer:player_collided()
@@ -115,11 +117,20 @@ function renderer:draw()
       end
     end
   )
+
   for i, poly in ipairs(current_phase_drawables) do
     self:draw_phased_polygon(poly)
   end
+  -- self.blur_effect.draw(
+  --   function()
+  --     for i, poly in ipairs(current_phase_drawables) do
+  --       self:draw_phased_polygon(poly)
+  --     end
+  --   end
+  -- )
 
   love.graphics.setLineWidth(1)
+
   if self.shake_screen then
     love.graphics.pop()
   end

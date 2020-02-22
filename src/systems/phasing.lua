@@ -1,4 +1,4 @@
-local phasing = Concord.system({_components.phase})
+local phasing = Concord.system({_components.phase}, {_components.phase, _components.control, "PLAYER"})
 
 function phasing:init()
   self.phases = {"RED", "BLUE"}
@@ -47,8 +47,6 @@ function phasing:update(dt)
     if love.graphics.getWidth() > self.ripple_radius and self.ripple_transparency > 0 then
       self.ripple_radius = self.ripple_radius + (600 * dt)
       self.ripple_transparency = self.ripple_transparency - (0.8 * dt)
-      self:getWorld():emit("shake_screen", 1, 1)
-      love.audio.play(self.sfx)
     else --disperse the ripple
       self.ripple_radius = 0
       self.ripple_transparency = 0
@@ -65,7 +63,7 @@ function phasing:attempt_phase_shift()
         charge.current_charge = charge.current_charge - 1
         self.canPhase = false
         self.timer:after(
-          2.5,
+          0.5,
           function()
             self.canPhase = true
           end
@@ -88,18 +86,22 @@ function phasing:trigger_phase_shift()
     if phase.follow_world_phase then
       phase:set(self.phases[self.current_phase_index])
     end
-    if e:has(_components.control) then
-      self:ripple(e)
-    end
+  end
+  local player = self.PLAYER:get(1)
+  self:ripple(player:get(_components.transform).position)
+  self:getWorld():emit("shake_screen", 1, 1)
+  if self.sfx:isPlaying() then
+    self.sfx:stop()
+    self.sfx:play()
+  else
+    self.sfx:play()
   end
 
   self:getWorld():emit("phase_update", self.phases[self.current_phase_index])
 end
 
-function phasing:ripple(entity)
-  local transform = entity:get(_components.transform)
-  local position = transform.position
-  self.ripple_origin = position
+function phasing:ripple(origin)
+  self.ripple_origin = origin
   self.ripple_transparency = 0.75
   self.ripple_radius = 0.1
 end
