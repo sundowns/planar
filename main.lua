@@ -35,6 +35,7 @@ end
 
 function love.draw()
   _worlds.game:emit("draw")
+  _worlds.game:emit("draw_ui")
 end
 
 function love.keypressed(key, _, _)
@@ -45,7 +46,7 @@ function love.keypressed(key, _, _)
   elseif key == "f1" then
     _DEBUG = not _DEBUG
   elseif key == "space" then
-    _worlds.game:emit("trigger_phase_shift")
+    _worlds.game:emit("attempt_phase_shift")
   end
 
   _worlds.game:emit("keypressed", key)

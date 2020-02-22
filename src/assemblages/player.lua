@@ -23,6 +23,9 @@ return Concord.assemblage(
     e:give(_components.transform, origin, Vector(0, 0)):give(_components.polygon, vertex_offsets):give(
       _components.phase,
       true
-    ):give(_components.flight, PLAYER_ACCELERATION):give(_components.control, bindings)
+    ):give(_components.flight, PLAYER_ACCELERATION):give(_components.control, bindings):give(
+      _components.charge,
+      _constants.PLAYER.MAX_CHARGE
+    )
   end
 )
