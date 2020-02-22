@@ -9,6 +9,10 @@ function collider:init()
   self.collision_worlds = {}
 end
 
+function collider:player_collided()
+  self:disable()
+end
+
 function collider:onEntityAdded(e)
   -- check if entity has a phase component:
   if e:has(_components.phase) then

@@ -10,6 +10,10 @@ function spawning:init()
   self.max_obstacle_velocity = _constants.SPAWNER.BASE_MAX_OBSTACLE_VELOCITY
 end
 
+function spawning:player_collided()
+  self:disable()
+end
+
 function spawning:begin_wave()
   self.wave_timer:clear()
   self.wave_active = true

@@ -15,6 +15,10 @@ function phasing:onEntityAdded(e)
   end
 end
 
+function phasing:player_collided()
+  self:disable()
+end
+
 function phasing:update(dt)
   for i = 1, self.pool.size do
     local e = self.pool:get(i)

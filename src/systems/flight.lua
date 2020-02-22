@@ -27,4 +27,8 @@ function flight:update(dt)
   end
 end
 
+function flight:player_collided()
+  self:disable()
+end
+
 return flight

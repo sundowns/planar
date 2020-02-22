@@ -7,6 +7,15 @@ function renderer:init()
     ["RED"] = {1, 0, 0},
     ["BLUE"] = {0, 0, 1}
   }
+  self.final_score = 0
+end
+
+function renderer:player_collided()
+  --self:disable()
+end
+
+function renderer:display_final_score(final)
+  self.final_score = final
 end
 
 function renderer:phase_update(new_phase)
@@ -62,6 +71,18 @@ function renderer:draw()
   end
 
   love.graphics.setLineWidth(1)
+
+  -- final score display
+  if self.final_score > 0 then
+    love.graphics.setColor(1, 1, 0, 1)
+    love.graphics.print(
+      "GAME OVER",
+      _constants.SCORE.X_FINAL,
+      _constants.SCORE.Y_FINAL - (love.graphics.getHeight() / 32)
+    )
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.print("Final score: " .. self.final_score, _constants.SCORE.X_FINAL, _constants.SCORE.Y_FINAL)
+  end
 end
 
 return renderer

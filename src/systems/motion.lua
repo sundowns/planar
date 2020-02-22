@@ -10,6 +10,10 @@ function motion:update(dt)
   end
 end
 
+function motion:player_collided()
+  self:disable()
+end
+
 function motion:onEntityAdded(e)
   print("??")
 end
