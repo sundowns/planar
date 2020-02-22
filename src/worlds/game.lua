@@ -8,6 +8,7 @@ game:addSystem(_systems.flight)
 game:addSystem(_systems.phasing)
 game:addSystem(_systems.spawning)
 game:addSystem(_systems.collider)
+game:addSystem(_systems.score)
 
 -- insane hack cause I don't know how tf to do this with concord anymore, pretty much circumventing the pool sytem :c
 function game:onEntityAdded(e)
