@@ -6,6 +6,9 @@ function phasing:init()
   self.ripple_radius = 0
   self.ripple_origin = Vector(0, 0)
   self.ripple_transparency = 0
+  self.canPhase = true
+  self.timer = Timer.new()
+  self.sfx = love.audio.newSource("resources/audio/phaseshift2.wav", "static")
 
   self.pool.onEntityAdded = function(pool, e)
     local entity_phase = e:get(_components.phase)
@@ -20,6 +23,7 @@ function phasing:player_collided()
 end
 
 function phasing:update(dt)
+  self.timer:update(dt)
   for i = 1, self.pool.size do
     local e = self.pool:get(i)
     -- Charge
@@ -41,6 +45,7 @@ function phasing:update(dt)
       self.ripple_radius = self.ripple_radius + (600 * dt)
       self.ripple_transparency = self.ripple_transparency - (0.8 * dt)
       self:getWorld():emit("shake_screen", 1, 1)
+      love.audio.play(self.sfx)
     else --disperse the ripple
       self.ripple_radius = 0
       self.ripple_transparency = 0
@@ -53,8 +58,15 @@ function phasing:attempt_phase_shift()
     local e = self.pool:get(i)
     if e:has(_components.charge) then
       local charge = e:get(_components.charge)
-      if charge.current_charge >= 1 then
+      if charge.current_charge >= 1 and self.canPhase then
         charge.current_charge = charge.current_charge - 1
+        self.canPhase = false
+        self.timer:after(
+          2.5,
+          function()
+            self.canPhase = true
+          end
+        )
         self:trigger_phase_shift()
       end
     end
