@@ -8,7 +8,7 @@ return Concord.assemblage(
       Vector(0, units / math.sqrt(3)),
       Vector(units, -units)
     }
-    local PLAYER_ACCELERATION = 100
+    local PLAYER_ACCELERATION = 300
     local bindings = {
       ["left"] = "left",
       ["right"] = "right",
