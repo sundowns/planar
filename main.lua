@@ -2,17 +2,14 @@ local _worlds = nil -- should not have visbility of each other...
 _DEBUG = false
 
 function love.load()
-  bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
-  -- love.graphics.setDefaultFilter("nearest", "nearest", 0)
+  local bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
   Vector = require("libs.vector")
   Timer = require("libs.timer")
   _constants = require("src.constants")
   _util = require("libs.util")
-  resources = require("libs.cargo").init("resources")
   HC = require("libs.HC")
   Concord = require("libs.concord")
   moonshine = require("libs.moonshine")
-  -- love.graphics.setBackgroundColor(0.05, 0.05, 0.05)
 
   _components = Concord.components
   _systems = Concord.systems
@@ -28,13 +25,13 @@ function love.load()
   _worlds.game:emit("set_collision_world", "RED", HC.new())
   _worlds.game:emit("set_collision_world", "BLUE", HC.new())
 
+  bgm:setLooping(true)
+  love.audio.play(bgm)
   -- Assemble the player entity
   _assemblages.player:assemble(
     Concord.entity(_worlds.game),
     Vector(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
   )
-  bgm:setLooping(true)
-  love.audio.play(bgm)
   _worlds.game:emit("phase_update", "RED")
   _worlds.game:emit("begin_wave")
 end

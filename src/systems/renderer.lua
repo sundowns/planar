@@ -8,6 +8,10 @@ function renderer:init()
     ["RED"] = {220 / 255, 20 / 255, 60 / 255},
     ["BLUE"] = {30 / 255, 144 / 255, 1}
   }
+  self.background_images = {
+    ["BLUE"] = love.graphics.newImage("resources/backgrounds/blue.png"),
+    ["RED"] = love.graphics.newImage("resources/backgrounds/red.png")
+  }
   self.final_score_text = nil
   self.game_over = false
   self.game_over_text = love.graphics.newText(love.graphics.getFont(), "GAME OVER")
@@ -16,6 +20,7 @@ function renderer:init()
   self.shake_duration = 0
   self.shake_count = 0
   self.shake_magnitude = 2
+  -- Glowing line shader
   self.glow_effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.godsray)
   self.glow_effect.glow.strength = 2
   self.glow_effect.godsray.exposure = 0.35
@@ -84,6 +89,15 @@ end
 
 function renderer:draw()
   _util.l.resetColour()
+  -- draw background
+  love.graphics.draw(
+    self.background_images[self.current_phase],
+    0,
+    0,
+    0,
+    love.graphics.getWidth() / self.background_images[self.current_phase]:getWidth(),
+    love.graphics.getHeight() / self.background_images[self.current_phase]:getHeight()
+  )
 
   if self.shake_screen then
     love.graphics.push()
