@@ -7,31 +7,38 @@ local collider =
 function collider:init()
   self.current_phase = nil
   self.collision_worlds = {}
-end
 
-function collider:onEntityAdded(e)
-  -- check if entity has a phase component:
-  if e:has(_components.phase) then
+  self.pool.onEntityRemoved = function(pool, e)
     local phase = e:get(_components.phase)
-    assert(
-      self.collision_worlds[phase.current],
-      "collision_worlds to add entity to non-existent collision world: " .. phase.current
-    )
-
-    local collides = e:get(_components.collides)
-    local polygon = e:get(_components.polygon)
-    local transform = e:get(_components.transform)
-    -- fuck me ey
-    collides:set_hitbox(
-      self.collision_worlds[phase.current]:polygon(unpack(polygon:calculate_world_vertices(transform.position)))
-    )
-  else
-    -- add it to the neutral world?
+    if phase then
+      assert(
+        self.collision_worlds[phase.current],
+        "collision_worlds to add entity to non-existent collision world: " .. phase.current
+      )
+      self.collision_worlds[phase.current]:remove(e:get(_components.collides).hitbox)
+    end
   end
-end
 
-function collider:onEntityRemoved(e)
-  print("[stub] collider removed an entity!!") -- TODO: clean up hitboxes
+  self.pool.onEntityAdded = function(pool, e)
+    -- check if entity has a phase component:
+    if e:has(_components.phase) then
+      local phase = e:get(_components.phase)
+      assert(
+        self.collision_worlds[phase.current],
+        "collision_worlds to add entity to non-existent collision world: " .. phase.current
+      )
+
+      local collides = e:get(_components.collides)
+      local polygon = e:get(_components.polygon)
+      local transform = e:get(_components.transform)
+      -- fuck me ey
+      collides:set_hitbox(
+        self.collision_worlds[phase.current]:polygon(unpack(polygon:calculate_world_vertices(transform.position)))
+      )
+    else
+      -- add it to the neutral world?
+    end
+  end
 end
 
 function collider:set_collision_world(phase, collision_world)
