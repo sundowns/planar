@@ -62,11 +62,12 @@ function phasing:attempt_phase_shift()
       if charge.current_charge >= 1 and self.canPhase then
         charge.current_charge = charge.current_charge - 1
         self.canPhase = false
-        local rng = math.random(1, 10)
+        local rng = math.random(1, 8)
+        print(rng)
         self.timer:after(
           2.5,
           function()
-            if rng == 10 then
+            if rng == 1 then
               love.audio.play(self.ambience)
             end
             self.canPhase = true
