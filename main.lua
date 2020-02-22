@@ -64,5 +64,5 @@ function love.mousereleased(x, y, button, _, _)
 end
 
 function love.resize(w, h)
-  _worlds.world:emit("resize", w, h)
+  _worlds.game:emit("resize", w, h)
 end
