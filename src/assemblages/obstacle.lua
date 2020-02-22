@@ -1,7 +1,7 @@
 -- e is the Entity being assembled.
 -- cuteness and legs are variables passed in
 
-local VALID_SHAPES = {["TRIANGLE"] = true, ["SQUARE"] = true}
+local VALID_SHAPES = {["TRIANGLE"] = true, ["SQUARE"] = true, ["PENTAGON"] = true}
 
 function get_shape_vertices(shape, scale, rotation)
   local units = 10
@@ -21,6 +21,8 @@ function get_shape_vertices(shape, scale, rotation)
       Vector(units, units),
       Vector(-units, units)
     }
+  elseif shape == "PENTAGON" then
+  -- https://math.stackexchange.com/questions/1990504/how-to-find-the-coordinates-of-the-vertices-of-a-pentagon-centered-at-the-origin
   end
 
   -- apply initial rotation
