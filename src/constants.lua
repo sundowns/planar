@@ -19,6 +19,7 @@ return {
         X_FINAL = love.graphics.getWidth() / 2.2,
         Y_FINAL = love.graphics.getHeight() / 2
     },
+    REMOVE_OBSTACLES_BUFFER_DISTANCE = 100, -- this MUST be greater than SPAWN_OFFSCREEN_OFFSET
     CHARGE_BAR_HEIGHT = 0.04,
     CHARGE_BAR_WIDTH = 0.6
 }

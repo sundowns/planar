@@ -6,12 +6,12 @@ function phasing:init()
   self.ripple_radius = 0
   self.ripple_origin = Vector(0, 0)
   self.ripple_transparency = 0
-end
 
-function phasing:onEntityAdded(e)
-  local entity_phase = e:get(_components.phase)
-  if entity_phase.follow_world_phase then
-    entity_phase:set(self.phases[self.current_phase_index])
+  self.pool.onEntityAdded = function(pool, e)
+    local entity_phase = e:get(_components.phase)
+    if entity_phase.follow_world_phase then
+      entity_phase:set(self.phases[self.current_phase_index])
+    end
   end
 end
 
