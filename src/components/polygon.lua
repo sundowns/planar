@@ -4,7 +4,6 @@ local polygon =
   Concord.component(
   function(e, vertices)
     assert(vertices and #vertices >= 3, "polygon component received less than 3 vertices")
-
     e.vertices = vertices
   end
 )

@@ -1,4 +1,8 @@
-local motion = Concord.system({_components.transform})
+local motion =
+  Concord.system(
+  {_components.transform},
+  {_components.transform, _components.rotation, _components.polygon, "ROTATING"}
+)
 
 function motion:init()
   self.obstacle_min_x = nil
@@ -22,6 +26,27 @@ function motion:update(dt)
   end
   for i, entity in ipairs(to_remove) do
     self:getWorld():removeEntity(entity)
+  end
+
+  for i = 1, self.ROTATING.size do
+    self:rotate_entity(self.ROTATING:get(i), dt)
+  end
+end
+
+function motion:rotate_entity(e, dt)
+  local transform = e:get(_components.transform)
+  local rotation = e:get(_components.rotation)
+  local polygon = e:get(_components.polygon)
+  local rotational_delta = rotation.speed * dt
+
+  for i, vertex in ipairs(polygon.vertices) do
+    polygon.vertices[i] = Vector(_util.m.rotatePointAroundOrigin(vertex.x, vertex.y, rotational_delta))
+  end
+
+  transform:rotate(rotational_delta)
+
+  if e:has(_components.collides) then
+    e:get(_components.collides).hitbox:rotate(rotational_delta)
   end
 end
 
