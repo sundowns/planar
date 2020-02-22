@@ -1,4 +1,8 @@
-local collider = Concord.system({_components.collides, _components.transform, _components.polygon})
+local collider =
+  Concord.system(
+  {_components.collides, _components.transform, _components.polygon},
+  {_components.collides, _components.transform, _components.polygon, _components.control, "PLAYER"}
+)
 
 function collider:init()
   self.current_phase = nil
@@ -41,6 +45,15 @@ end
 function collider:update(_)
   for i = 1, self.pool.size do
     self:update_entity(self.pool:get(i))
+  end
+
+  for i = 1, self.PLAYER.size do
+    local player = self.PLAYER:get(i)
+    local collides = player:get(_components.collides)
+    local transform = player:get(_components.transform)
+    for shape, delta in pairs(self.collision_worlds[self.current_phase]:collisions(collides.hitbox)) do
+      self:getWorld():emit("player_collided")
+    end
   end
 end
 
