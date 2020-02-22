@@ -102,7 +102,7 @@ function spawning:spawn_random_obstacle()
     position,
     velocity,
     _util.g.choose("RED", "BLUE"),
-    _util.g.choose("TRIANGLE", "SQUARE"),
+    _util.g.choose("TRIANGLE", "SQUARE", "PENTAGON"),
     love.math.random(1.25, 3.5),
     love.math.random(0, 2)
   )

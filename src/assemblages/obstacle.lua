@@ -22,7 +22,14 @@ function get_shape_vertices(shape, scale, rotation)
       Vector(-units, units)
     }
   elseif shape == "PENTAGON" then
-  -- https://math.stackexchange.com/questions/1990504/how-to-find-the-coordinates-of-the-vertices-of-a-pentagon-centered-at-the-origin
+    -- https://math.stackexchange.com/a/1990548
+    vertices = {
+      Vector(0, units),
+      Vector(units * math.cos(math.rad(18)), units * math.sin(math.rad(18))),
+      Vector(units * math.cos(math.rad(-54)), units * math.sin(math.rad(-54))),
+      Vector(-(units * math.cos(math.rad(-54))), units * math.sin(math.rad(-54))),
+      Vector(-(units * math.cos(math.rad(18))), units * math.sin(math.rad(18)))
+    }
   end
 
   -- apply initial rotation
