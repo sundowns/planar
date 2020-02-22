@@ -1,5 +1,5 @@
 local _worlds = nil -- should not have visbility of each other...
-_DEBUG = true
+_DEBUG = false
 
 function love.load()
   -- love.graphics.setDefaultFilter("nearest", "nearest", 0)
