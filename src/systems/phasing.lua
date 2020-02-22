@@ -8,7 +8,7 @@ function phasing:init()
   self.ripple_transparency = 0
   self.canPhase = true
   self.timer = Timer.new()
-  self.sfx = love.audio.newSource("resources/audio/phaseshift.wav", "static")
+  self.sfx = love.audio.newSource("resources/audio/phaseshift2.wav", "static")
 
   self.pool.onEntityAdded = function(pool, e)
     local entity_phase = e:get(_components.phase)
@@ -62,7 +62,7 @@ function phasing:attempt_phase_shift()
         charge.current_charge = charge.current_charge - 1
         self.canPhase = false
         self.timer:after(
-          1.5,
+          2.5,
           function()
             self.canPhase = true
           end
