@@ -30,7 +30,7 @@ function love.load()
     Concord.entity(_worlds.game),
     Vector(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
   )
-  _worlds.game:emit("trigger_phase_shift")
+  _worlds.game:emit("attempt_phase_shift")
   _worlds.game:emit("begin_wave")
 end
 
