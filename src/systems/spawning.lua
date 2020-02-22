@@ -1,21 +1,20 @@
 -- Draws polygonal shapes to the screen
 local spawning = Concord.system()
 
--- maybe just use polar coordinates with set magnitude instead?
-local MIN_OBSTACLE_VELOCITY = 10
-local MAX_OBSTACLE_VELOCITY = 25
-local SPAWN_OFFSCREEN_OFFSET = 50
-
 function spawning:init()
   self.wave_active = false
   self.wave_timer = Timer.new()
+
+  self.spawn_rate = _constants.SPAWNER.BASE_SPAWN_RATE
+  self.min_obstacle_velocity = _constants.SPAWNER.BASE_MIN_OBSTACLE_VELOCITY
+  self.max_obstacle_velocity = _constants.SPAWNER.BASE_MAX_OBSTACLE_VELOCITY
 end
 
 function spawning:begin_wave()
   self.wave_timer:clear()
   self.wave_active = true
   self.wave_timer:every(
-    3,
+    self.spawn_rate,
     function()
       self:spawn_random_obstacle()
     end
@@ -29,40 +28,40 @@ function spawning:spawn_random_obstacle()
   local position = Vector(0, 0)
   if edge == "left" then
     -- position x coordinate needs to be some set value below 0 (to spawn 'offscreen')
-    position.x = -SPAWN_OFFSCREEN_OFFSET
+    position.x = -_constants.SPAWNER.SPAWN_OFFSCREEN_OFFSET
     -- position y coordinate needs to be between 0 and screen height
     position.y = love.math.random(0, love.graphics.getHeight())
     -- velocity x needs to be positive
-    velocity.x = love.math.random(MIN_OBSTACLE_VELOCITY, MAX_OBSTACLE_VELOCITY)
+    velocity.x = love.math.random(self.min_obstacle_velocity, self.max_obstacle_velocity)
     -- velocity y can be anything
-    velocity.y = love.math.random(-MAX_OBSTACLE_VELOCITY, MAX_OBSTACLE_VELOCITY)
+    velocity.y = love.math.random(-self.max_obstacle_velocity, self.max_obstacle_velocity)
   elseif edge == "top" then
     -- position x coordinate needs to be between 0 and screen width
     position.x = love.math.random(0, love.graphics.getWidth())
     -- position y coordinate needs to be some set value below 0 (to spawn 'offscreen')
-    position.y = -SPAWN_OFFSCREEN_OFFSET
+    position.y = -_constants.SPAWNER.SPAWN_OFFSCREEN_OFFSET
     -- velocity x can be anything
-    velocity.x = love.math.random(-MAX_OBSTACLE_VELOCITY, MAX_OBSTACLE_VELOCITY)
+    velocity.x = love.math.random(-self.max_obstacle_velocity, self.max_obstacle_velocity)
     -- velocity y needs to be positive
-    velocity.y = love.math.random(MIN_OBSTACLE_VELOCITY, MAX_OBSTACLE_VELOCITY)
+    velocity.y = love.math.random(self.min_obstacle_velocity, self.max_obstacle_velocity)
   elseif edge == "right" then
     -- position x coordinate needs to be some set value above screen_width (to spawn 'offscreen')
-    position.x = love.graphics.getWidth() + SPAWN_OFFSCREEN_OFFSET
+    position.x = love.graphics.getWidth() + _constants.SPAWNER.SPAWN_OFFSCREEN_OFFSET
     -- position y coordinate needs to be between 0 and screen height
     position.y = love.math.random(0, love.graphics.getHeight())
     -- velocity x needs to be negative
-    velocity.x = love.math.random(-MIN_OBSTACLE_VELOCITY, -MAX_OBSTACLE_VELOCITY)
+    velocity.x = love.math.random(-self.min_obstacle_velocity, -self.max_obstacle_velocity)
     -- velocity y can be anything
-    velocity.y = love.math.random(-MAX_OBSTACLE_VELOCITY, MAX_OBSTACLE_VELOCITY)
+    velocity.y = love.math.random(-self.max_obstacle_velocity, self.max_obstacle_velocity)
   elseif edge == "bottom" then
     -- position x coordinate needs to be between 0 and screen width
     position.x = love.math.random(0, love.graphics.getWidth())
     -- position y coordinate needs to be some set value above screen_height (to spawn 'offscreen')
-    position.y = love.graphics.getHeight() + SPAWN_OFFSCREEN_OFFSET
+    position.y = love.graphics.getHeight() + _constants.SPAWNER.SPAWN_OFFSCREEN_OFFSET
     -- velocity x can be anything
-    velocity.x = love.math.random(-MAX_OBSTACLE_VELOCITY, MAX_OBSTACLE_VELOCITY)
+    velocity.x = love.math.random(-self.max_obstacle_velocity, self.max_obstacle_velocity)
     -- velocity y needs to be negative
-    velocity.y = love.math.random(-MIN_OBSTACLE_VELOCITY, -MAX_OBSTACLE_VELOCITY)
+    velocity.y = love.math.random(-self.min_obstacle_velocity, -self.max_obstacle_velocity)
   end
 
   Concord.assemblages.obstacle:assemble(
