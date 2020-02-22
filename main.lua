@@ -35,7 +35,7 @@ function love.load()
   )
   bgm:setLooping(true)
   love.audio.play(bgm)
-  _worlds.game:emit("attempt_phase_shift")
+  _worlds.game:emit("phase_update", "RED")
   _worlds.game:emit("begin_wave")
 end
 

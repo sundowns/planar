@@ -10,9 +10,6 @@ function phasing:init()
   self.timer = Timer.new()
   self.sfx = love.audio.newSource("resources/audio/phaseshift2.wav", "static")
 
-  -- https://github.com/vrld/moonshine
-  self.ripple_shader = moonshine(moonshine.effects.chromasep)
-
   self.pool.onEntityAdded = function(pool, e)
     local entity_phase = e:get(_components.phase)
     if entity_phase.follow_world_phase then
@@ -114,11 +111,9 @@ function phasing:draw(dt)
       blue = self.ripple_transparency
     end
     love.graphics.setColor(red, 0, blue, self.ripple_transparency)
-    self.ripple_shader(
-      function()
-        love.graphics.circle("fill", self.ripple_origin.x, self.ripple_origin.y, self.ripple_radius)
-      end
-    )
+    love.graphics.circle("fill", self.ripple_origin.x, self.ripple_origin.y, self.ripple_radius)
+
+    _util.l.resetColour()
   end
 end
 
