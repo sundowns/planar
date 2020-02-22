@@ -2,6 +2,7 @@ local _worlds = nil -- should not have visbility of each other...
 _DEBUG = false
 
 function love.load()
+  bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
   -- love.graphics.setDefaultFilter("nearest", "nearest", 0)
   Vector = require("libs.vector")
   Timer = require("libs.timer")
@@ -32,10 +33,10 @@ function love.load()
     Concord.entity(_worlds.game),
     Vector(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
   )
-  bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
+  bgm:setLooping(true)
   love.audio.play(bgm)
   _worlds.game:emit("attempt_phase_shift")
-  _worlds.game:emit("begin_wave")
+  -- _worlds.game:emit("begin_wave")
 end
 
 function love.update(dt)

@@ -17,7 +17,7 @@ function renderer:init()
   self.shake_count = 0
   self.shake_magnitude = 2
   self.glow_effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.godsray)
-  self.glow_effect.glow.strength = 3
+  self.glow_effect.glow.strength = 2
 end
 
 function renderer:player_collided()
