@@ -3,11 +3,14 @@ local spawning = Concord.system()
 
 function spawning:init()
   self.wave_active = false
+  self.time_elapsed = 0
   self.wave_timer = Timer.new()
 
-  self.spawn_rate = _constants.SPAWNER.BASE_SPAWN_RATE
+  self.spawn_interval = _constants.SPAWNER.INITIAL_SPAWN_INTERVAL
   self.min_obstacle_velocity = _constants.SPAWNER.BASE_MIN_OBSTACLE_VELOCITY
   self.max_obstacle_velocity = _constants.SPAWNER.BASE_MAX_OBSTACLE_VELOCITY
+
+  self.minimum_spawn_interval = 0.05
 end
 
 function spawning:player_collided()
@@ -17,8 +20,34 @@ end
 function spawning:begin_wave()
   self.wave_timer:clear()
   self.wave_active = true
-  self.wave_timer:every(
-    self.spawn_rate,
+  self.spawning_fn =
+    self.wave_timer:every(
+    self.spawn_interval,
+    function()
+      self:spawn_random_obstacle()
+    end
+  )
+
+  self.increase_rate_fn =
+    self.wave_timer:every(
+    3,
+    function()
+      self:increase_spawn_rate()
+    end
+  )
+end
+
+function spawning:increase_spawn_rate()
+  self.spawn_interval = math.max((1 / math.log(2.5 * self.time_elapsed)) - 0.1, self.minimum_spawn_interval)
+  -- print(self.time_elapsed .. " , " .. self.spawn_interval)
+  if self.spawn_interval == self.minimum_spawn_interval then
+    self.wave_timer:cancel(self.increase_rate_fn)
+  end
+
+  self.wave_timer:cancel(self.spawning_fn)
+  self.spawning_fn =
+    self.wave_timer:every(
+    self.spawn_interval,
     function()
       self:spawn_random_obstacle()
     end
@@ -81,6 +110,7 @@ end
 
 function spawning:update(dt)
   self.wave_timer:update(dt)
+  self.time_elapsed = self.time_elapsed + dt
 end
 
 return spawning
