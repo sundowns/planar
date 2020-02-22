@@ -10,6 +10,8 @@ function love.load()
   resources = require("libs.cargo").init("resources")
   HC = require("libs.HC")
   Concord = require("libs.concord")
+  moonshine = require("libs.moonshine")
+  -- love.graphics.setBackgroundColor(0.05, 0.05, 0.05)
 
   _components = Concord.components
   _systems = Concord.systems
@@ -40,6 +42,7 @@ end
 
 function love.draw()
   _worlds.game:emit("draw")
+
   _worlds.game:emit("draw_ui")
 end
 

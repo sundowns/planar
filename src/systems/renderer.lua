@@ -1,5 +1,6 @@
 -- Draws polygonal shapes to the screen
-local renderer = Concord.system({_components.transform, _components.polygon})
+local renderer =
+  Concord.system({_components.transform, _components.polygon}, {_components.control, _components.transform, "PLAYER"})
 
 function renderer:init()
   self.current_phase = nil
@@ -15,6 +16,8 @@ function renderer:init()
   self.shake_duration = 0
   self.shake_count = 0
   self.shake_magnitude = 2
+  self.glow_effect = moonshine(moonshine.effects.glow).chain(moonshine.effects.godsray)
+  self.glow_effect.glow.strength = 3
 end
 
 function renderer:player_collided()
@@ -22,6 +25,9 @@ function renderer:player_collided()
 end
 
 function renderer:shake_screen(duration, magnitude)
+  if self.shake_screen then
+    return
+  end
   self.shake_screen = true
   self.shake_duration = duration
   self.shake_magnitude = magnitude
@@ -37,6 +43,13 @@ function renderer:update(dt)
       self.shake_duration = 0
     end
   end
+
+  local player = self.PLAYER:get(1)
+  local position = player:get(_components.transform).position
+  self.glow_effect.godsray.light_position = {
+    position.x / love.graphics.getWidth(),
+    position.y / love.graphics.getHeight()
+  }
 end
 
 function renderer:display_final_score(final)
@@ -69,6 +82,7 @@ end
 
 function renderer:draw()
   if self.shake_screen then
+    love.graphics.push()
     local dx = love.math.random(-self.shake_magnitude, self.shake_magnitude)
     local dy = love.math.random(-self.shake_magnitude, self.shake_magnitude)
     love.graphics.translate(dx / self.shake_count, dy / self.shake_count)
@@ -94,16 +108,24 @@ function renderer:draw()
     _util.l.resetColour()
   end
 
-  for i, poly in ipairs(alternate_phase_drawables) do
-    self:draw_phased_polygon(poly)
-  end
-
+  self.glow_effect.draw(
+    function()
+      for i, poly in ipairs(alternate_phase_drawables) do
+        self:draw_phased_polygon(poly)
+      end
+    end
+  )
   for i, poly in ipairs(current_phase_drawables) do
     self:draw_phased_polygon(poly)
   end
 
   love.graphics.setLineWidth(1)
+  if self.shake_screen then
+    love.graphics.pop()
+  end
+end
 
+function renderer:draw_ui()
   -- final score display
   if self.game_over then
     love.graphics.setColor(1, 1, 0, 1)

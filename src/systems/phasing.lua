@@ -40,7 +40,7 @@ function phasing:update(dt)
     if love.graphics.getWidth() > self.ripple_radius and self.ripple_transparency > 0 then
       self.ripple_radius = self.ripple_radius + (600 * dt)
       self.ripple_transparency = self.ripple_transparency - (0.8 * dt)
-      self:getWorld():emit("shake_screen", 1, 2)
+      self:getWorld():emit("shake_screen", 1, 1)
     else --disperse the ripple
       self.ripple_radius = 0
       self.ripple_transparency = 0
