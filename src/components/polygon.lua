@@ -6,14 +6,6 @@ local polygon =
     assert(vertices and #vertices >= 3, "polygon component received less than 3 vertices")
 
     e.vertices = vertices
-
-    -- flatten vertices into a 1D array for drawing purposes
-    local flat_vertices = {}
-    for i, vertex in ipairs(vertices) do
-      flat_vertices[#flat_vertices + 1] = vertex.x
-      flat_vertices[#flat_vertices + 1] = vertex.y
-    end
-    e.flat_vertices = flat_vertices
   end
 )
 

@@ -10,6 +10,10 @@ function motion:update(dt)
   end
 end
 
+function motion:onEntityAdded(e)
+  print("??")
+end
+
 function motion:enforce_boundaries(transform)
   -- horizontal
   local x_min = love.graphics.getWidth() / _constants.PLAYER.SIZE

@@ -1,5 +1,5 @@
 local _worlds = nil -- should not have visbility of each other...
-_DEBUG = false
+_DEBUG = true
 
 function love.load()
   -- love.graphics.setDefaultFilter("nearest", "nearest", 0)
@@ -8,6 +8,7 @@ function love.load()
   _constants = require("src.constants")
   _util = require("libs.util")
   resources = require("libs.cargo").init("resources")
+  HC = require("libs.HC")
   Concord = require("libs.concord")
 
   _components = Concord.components
@@ -19,6 +20,10 @@ function love.load()
   Concord.loadSystems("src/systems")
   Concord.loadWorlds("src/worlds")
   Concord.loadAssemblages("src/assemblages")
+
+  --https://hc.readthedocs.io/en/latest/MainModule.html#initialization
+  _worlds.game:emit("set_collision_world", "RED", HC.new())
+  _worlds.game:emit("set_collision_world", "BLUE", HC.new())
 
   -- Assemble the player entity
   _assemblages.player:assemble(

@@ -1,6 +1,6 @@
 local collides =
   Concord.component(
-  function(e, vertices, offset)
+  function(e, offset)
     assert(type, "missing type for collides component")
     e.offset = offset or Vector(0, 0)
     e.hitbox = nil

@@ -42,6 +42,6 @@ return Concord.assemblage(
       _components.phase,
       false,
       phase
-    )
+    ):give(_components.collides)
   end
 )

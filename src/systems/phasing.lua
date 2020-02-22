@@ -5,7 +5,7 @@ function phasing:init()
   self.current_phase_index = 1
 end
 
-function phasing:entityAdded(e)
+function phasing:onEntityAdded(e)
   local entity_phase = e:get(_components.phase)
   if entity_phase.follow_world_phase then
     entity_phase:set(self.phases[self.current_phase_index])

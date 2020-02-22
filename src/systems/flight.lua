@@ -1,6 +1,5 @@
 local flight = Concord.system({_components.transform, _components.control, _components.flight})
 
--- TODO: friction
 function flight:update(dt)
   for i = 1, self.pool.size do
     local e = self.pool:get(i)
