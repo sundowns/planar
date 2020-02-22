@@ -86,11 +86,14 @@ end
 
 function phasing:draw(dt)
   if self.ripple_radius > 0 then
+    local red = 0
+    local blue = 0
     if self.current_phase_index == 1 then
-      love.graphics.setColor(self.ripple_transparency, 0, 0, self.ripple_transparency)
+      red = self.ripple_transparency
     else
-      love.graphics.setColor(0, 0, self.ripple_transparency, self.ripple_transparency)
+      blue = self.ripple_transparency
     end
+    love.graphics.setColor(red, 0, blue, self.ripple_transparency)
     love.graphics.circle("fill", self.ripple_origin.x, self.ripple_origin.y, self.ripple_radius)
   end
 end
