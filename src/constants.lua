@@ -1,7 +1,8 @@
 return {
     PLAYER = {
-        FRICTION = 1,
-        MAX_SPEED = 360
+        FRICTION = 1.5,
+        MAX_SPEED = 360,
+        SIZE = 64
     },
     SPAWNER = {
         SPAWN_OFFSCREEN_OFFSET = 50,
