@@ -10,7 +10,6 @@ function love.load()
   HC = require("libs.HC")
   Concord = require("libs.concord")
   moonshine = require("libs.moonshine")
-  flux = require("libs.flux")
 
   _components = Concord.components
   _systems = Concord.systems
@@ -38,7 +37,6 @@ function love.load()
 end
 
 function love.update(dt)
-  flux.update(dt)
   _worlds.game:emit("update", dt)
 end
 

@@ -7,7 +7,7 @@ function score:init()
     self.timer:every(
         2,
         function()
-            flux.to(self, 1, {current = (self.current + 10)})
+            self:increment(self.score_increment)
         end
     )
 end
@@ -19,7 +19,7 @@ function score:player_collided()
 end
 
 function score:increment(delta_points)
-    self.current = self.current + delta_points
+    self.timer:tween(1, self, {current = self.current + delta_points})
 end
 
 function score:update(dt)
