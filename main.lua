@@ -15,9 +15,8 @@ function love.load()
   love.window.setIcon(love.image.newImageData("resources/sprites/ship_blue.png"))
 
   _fonts = {
-    ["SCORE_COUNTER"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 32),
-    ["GAME_OVER"] = love.graphics.newFont("resources/fonts/venus rising rg.ttf", 32),
-    ["FINAL_SCORE"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 24)
+    ["SCORE_COUNTER"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 48),
+    ["FINAL_SCORE"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 36)
   }
 
   _components = Concord.components

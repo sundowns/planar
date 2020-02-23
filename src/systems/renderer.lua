@@ -15,9 +15,9 @@ function renderer:init()
     ["BLUE"] = love.graphics.newImage("resources/backgrounds/blue.png"),
     ["RED"] = love.graphics.newImage("resources/backgrounds/red.png")
   }
+  self.game_over_image = love.graphics.newImage("resources/misc/gameover.png")
   self.final_score_text = nil
   self.game_over = false
-  self.game_over_text = love.graphics.newText(_fonts["GAME_OVER"], "GAME OVER")
   -- Screen shake shit
   self.shake_screen = false
   self.shake_duration = 0
@@ -162,14 +162,6 @@ function renderer:draw()
 
   self:draw_phased_sprite(self.PLAYER:get(1))
 
-  -- self.blur_effect.draw(
-  --   function()
-  --     for i, poly in ipairs(current_phase_drawables) do
-  --       self:draw_phased_polygon(poly)
-  --     end
-  --   end
-  -- )
-
   love.graphics.setLineWidth(1)
 
   if self.shake_screen then
@@ -180,13 +172,13 @@ end
 function renderer:draw_ui()
   -- final score display
   if self.game_over then
-    love.graphics.setColor(1, 1, 0, 1)
+    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(
-      self.game_over_text,
-      love.graphics.getWidth() / 2 - self.game_over_text:getWidth() / 2,
-      love.graphics.getHeight() / 2 - self.game_over_text:getHeight() - self.final_score_text:getHeight()
+      self.game_over_image,
+      love.graphics.getWidth() / 2 - self.game_over_image:getWidth() / 2,
+      love.graphics.getHeight() / 2 - self.game_over_image:getHeight() - self.final_score_text:getHeight()
     )
-    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.setColor(_constants.SCORE.COLOUR)
     love.graphics.draw(
       self.final_score_text,
       love.graphics.getWidth() / 2 - self.final_score_text:getWidth() / 2,

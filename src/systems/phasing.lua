@@ -11,6 +11,7 @@ function phasing:init()
   self.timer = Timer.new()
   self.sfx = love.audio.newSource("resources/audio/phaseshift2.wav", "static")
   self.ambience = love.audio.newSource("resources/audio/ambience.wav", "static")
+  self.ripple_tween_fn = nil
 
   self.pool.onEntityAdded = function(pool, e)
     local entity_phase = e:get(_components.phase)
@@ -48,6 +49,7 @@ function phasing:update(dt)
       self.ripple_radius = 0
       self.ripple_transparency = 0
       self.ripple_active = false
+      self.timer:cancel(self.ripple_tween_fn)
     end
   end
 end
@@ -107,7 +109,8 @@ function phasing:ripple(origin)
   self.ripple_transparency = 0.75
   self.ripple_radius = 0.1
   -- this will tween to double the width of the screen
-  self.timer:tween(8, self, {ripple_radius = love.graphics.getWidth(), ripple_transparency = 0}, "out-elastic")
+  self.ripple_tween_fn =
+    self.timer:tween(8, self, {ripple_radius = love.graphics.getWidth(), ripple_transparency = 0}, "out-elastic")
 end
 
 function phasing:draw(dt)

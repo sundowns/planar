@@ -29,7 +29,7 @@ function score:update(dt)
 end
 
 function score:draw_ui()
-    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.setColor(_constants.SCORE.COLOUR)
     love.graphics.draw(self.score_text, _constants.SCORE.X, _constants.SCORE.Y)
     _util.l.resetColour()
 end
