@@ -2,7 +2,7 @@
 -- cuteness and legs are variables passed in
 return Concord.assemblage(
   function(e, origin)
-    local units = 22
+    local units = 18
     vertex_offsets = {
       Vector(0, -math.sqrt(3) / 3 * units),
       Vector(-units / 2, math.sqrt(3) / 6 * units),

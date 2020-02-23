@@ -61,7 +61,7 @@ function love.keypressed(key, _, _)
   elseif key == "escape" then
     love.event.quit()
   elseif key == "f1" then
-    -- _DEBUG = not _DEBUG
+    _DEBUG = not _DEBUG
   elseif key == "space" then
     _worlds.game:emit("attempt_phase_shift")
   end
