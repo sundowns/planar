@@ -34,7 +34,8 @@ end
 function transform:apply_friction(friction, dt)
   if self.velocity:len() > 0 then
     self.velocity = self.velocity - (self.velocity:normalized() * self.velocity:len() * friction) * dt
-    if self.velocity:len() < 3 then
+    -- big brain hack
+    if self.velocity:len() < 5 and not love.keyboard.isDown("w", "a", "s", "d", "up", "left", "right", "down") then
       self.velocity = Vector(0, 0)
     end
   end
