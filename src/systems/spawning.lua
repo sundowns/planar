@@ -2,6 +2,7 @@
 local spawning = Concord.system()
 
 function spawning:init()
+  self.current_phase = nil
   self.wave_active = false
   self.time_elapsed = 0
   self.wave_timer = Timer.new()
@@ -15,6 +16,10 @@ end
 
 function spawning:player_collided()
   self:disable()
+end
+
+function spawning:phase_update(new_phase)
+  self.current_phase = new_phase
 end
 
 function spawning:begin_wave()
@@ -96,11 +101,26 @@ function spawning:spawn_random_obstacle()
     velocity.y = love.math.random(-self.min_obstacle_velocity, -self.max_obstacle_velocity)
   end
 
+  local obstacle_phase = nil
+  if self.current_phase == "RED" then
+    obstacle_phase =
+      _util.g.choose_weighted(
+      {"RED", _constants.SPAWNER.CHANCE_TO_SPAWN_CURRENT_PHASE_OBSTACLE},
+      {"BLUE", 100 - _constants.SPAWNER.CHANCE_TO_SPAWN_CURRENT_PHASE_OBSTACLE}
+    )
+  else
+    obstacle_phase =
+      _util.g.choose_weighted(
+      {"RED", 100 - _constants.SPAWNER.CHANCE_TO_SPAWN_CURRENT_PHASE_OBSTACLE},
+      {"BLUE", _constants.SPAWNER.CHANCE_TO_SPAWN_CURRENT_PHASE_OBSTACLE}
+    )
+  end
+
   Concord.assemblages.obstacle:assemble(
     Concord.entity(Concord.worlds.game),
     position,
     velocity,
-    _util.g.choose("RED", "BLUE"),
+    obstacle_phase,
     _util.g.choose("TRIANGLE", "SQUARE", "PENTAGON"),
     love.math.random(1.25, 3.5),
     love.math.random(0, 2)

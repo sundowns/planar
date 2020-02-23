@@ -42,7 +42,7 @@ end
 
 return Concord.assemblage(
   function(e, origin, velocity, phase, shape, scale, rotation)
-    assert(phase == "RED" or phase == "BLUE", "received invalid phase to obstacle assemblage: " .. phase)
+    assert(phase == "RED" or phase == "BLUE", "received invalid phase to obstacle assemblage")
     assert(VALID_SHAPES[shape], "received invalid shape to obstacle assemblage: " .. shape)
     local scale = scale or 1
     local velocity = velocity or Vector(0, 0)

@@ -308,6 +308,28 @@ function util.generic.choose(...)
   return args[math.random(1, #args)]
 end
 
+-- To specify weight, include an integer in the table after the option. Defaults to 1.
+-- eg. choose_weighted({"choice_1", 5}, {"choice_2", 10})
+function util.generic.choose_weighted(...)
+  local args = {...}
+  -- technically should be done for all of the list but eh
+  assert(type(args[1]) == "table", "Options for choose_weighted()")
+
+  local weighting_sum = 0
+  for i, v in pairs(args) do
+    weighting_sum = weighting_sum + (v[2] or 1)
+  end
+
+  local rand = math.random(weighting_sum)
+  for i, v in pairs(args) do
+    if rand <= v[2] then
+      return args[i][1]
+    end
+    rand = rand - v[2]
+  end
+  assert("Something went very wrong...")
+end
+
 ---------------------- STRING
 
 function util.string.randomString(l)
