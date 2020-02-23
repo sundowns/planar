@@ -16,7 +16,8 @@ function love.load()
 
   _fonts = {
     ["SCORE_COUNTER"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 48),
-    ["FINAL_SCORE"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 36)
+    ["FINAL_SCORE"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 36),
+    ["RESTART"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 24)
   }
 
   _components = Concord.components
@@ -55,12 +56,10 @@ function love.draw()
 end
 
 function love.keypressed(key, _, _)
-  if key == "r" then
-    -- love.event.quit("restart")
-  elseif key == "escape" then
-    love.event.quit()
+  if key == "escape" then
+    -- love.event.quit()
   elseif key == "f1" then
-    _DEBUG = not _DEBUG
+    -- _DEBUG = not _DEBUG
   elseif key == "space" then
     _worlds.game:emit("attempt_phase_shift")
   end

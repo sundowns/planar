@@ -16,6 +16,9 @@ function renderer:init()
     ["RED"] = love.graphics.newImage("resources/backgrounds/red.png")
   }
   self.game_over_image = love.graphics.newImage("resources/misc/gameover.png")
+  self.restart_prompt = love.graphics.newText(_fonts["RESTART"], "PRESS ENTER TO PLAY AGAIN")
+  self.can_restart = false
+  self.restart_timer = Timer.new()
   self.final_score_text = nil
   self.game_over = false
   -- Screen shake shit
@@ -60,11 +63,20 @@ function renderer:update(dt)
     position.x / love.graphics.getWidth(),
     position.y / love.graphics.getHeight()
   }
+
+  self.restart_timer:update(dt)
 end
 
 function renderer:display_final_score(final)
   self.game_over = true
   self.final_score_text = love.graphics.newText(_fonts["FINAL_SCORE"], "SCORE: " .. final)
+
+  self.restart_timer:after(
+    1.25,
+    function()
+      self.can_restart = true
+    end
+  )
 end
 
 function renderer:phase_update(new_phase)
@@ -184,6 +196,20 @@ function renderer:draw_ui()
       love.graphics.getWidth() / 2 - self.final_score_text:getWidth() / 2,
       love.graphics.getHeight() / 2 - self.final_score_text:getHeight() / 2
     )
+    if self.can_restart then
+      love.graphics.draw(
+        self.restart_prompt,
+        love.graphics.getWidth() / 2 - self.restart_prompt:getWidth() / 2,
+        love.graphics.getHeight() / 2 + self.final_score_text:getHeight() * 2
+      )
+    end
+  end
+end
+
+-- this definitely doesnt belong here but...shut up!!
+function renderer:keypressed(key)
+  if self.can_restart and key == "return" then
+    love.event.quit("restart")
   end
 end
 
