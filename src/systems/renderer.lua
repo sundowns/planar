@@ -96,9 +96,11 @@ function renderer:draw_phased_sprite(e)
   local sprite = e:get(_components.sprite)
   local phase = e:get(_components.phase)
 
+  local shmangle = Vector(0, -1):angleTo(transform.velocity)
+
   local image = sprite.images[phase.current]
   _util.l.resetColour()
-  love.graphics.draw(image, position.x - image:getWidth() / 2, position.y - image:getHeight() / 2)
+  love.graphics.draw(image, position.x, position.y, -shmangle, 1, 1, image:getWidth() / 2, image:getHeight() / 2)
 end
 
 function renderer:draw()

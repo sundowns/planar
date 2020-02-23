@@ -1,5 +1,5 @@
 local _worlds = nil -- should not have visbility of each other...
-_DEBUG = true
+_DEBUG = false
 
 function love.load()
   local bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
@@ -10,6 +10,8 @@ function love.load()
   HC = require("libs.HC")
   Concord = require("libs.concord")
   moonshine = require("libs.moonshine")
+  _sprites = require("src.sprites")
+  love.window.setIcon(love.image.newImageData("resources/sprites/ship_blue.png"))
 
   _fonts = {
     ["SCORE_COUNTER"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 32),
@@ -21,8 +23,6 @@ function love.load()
   _systems = Concord.systems
   _worlds = Concord.worlds
   _assemblages = Concord.assemblages
-
-  _sprites = require("src.sprites")
 
   Concord.loadComponents("src/components")
   Concord.loadSystems("src/systems")
