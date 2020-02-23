@@ -51,6 +51,6 @@ return Concord.assemblage(
       _components.phase,
       false,
       phase
-    ):give(_components.collides):give(_components.rotation, love.math.random(-2, 2))
+    ):give(_components.collides):give(_components.spin, love.math.random(-2, 2))
   end
 )

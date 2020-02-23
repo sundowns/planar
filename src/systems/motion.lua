@@ -1,7 +1,8 @@
 local motion =
   Concord.system(
   {_components.transform},
-  {_components.transform, _components.rotation, _components.polygon, "ROTATING"}
+  {_components.transform, _components.spin, _components.polygon, "ROTATING"},
+  {_components.transform, _components.control, _components.collides, "PLAYER"}
 )
 
 function motion:init()
@@ -31,13 +32,21 @@ function motion:update(dt)
   for i = 1, self.ROTATING.size do
     self:rotate_entity(self.ROTATING:get(i), dt)
   end
+
+  for i = 1, self.PLAYER.size do
+    local player = self.PLAYER:get(i)
+    local velocity = player:get(_components.transform).velocity
+    if velocity:len() > 0 then
+      player:get(_components.collides).hitbox:setRotation(-Vector(0, -1):angleTo(velocity))
+    end
+  end
 end
 
 function motion:rotate_entity(e, dt)
   local transform = e:get(_components.transform)
-  local rotation = e:get(_components.rotation)
+  local spin = e:get(_components.spin)
   local polygon = e:get(_components.polygon)
-  local rotational_delta = rotation.speed * dt
+  local rotational_delta = spin.speed * dt
 
   for i, vertex in ipairs(polygon.vertices) do
     polygon.vertices[i] = Vector(_util.m.rotatePointAroundOrigin(vertex.x, vertex.y, rotational_delta))

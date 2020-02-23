@@ -2,6 +2,7 @@ local _worlds = nil -- should not have visbility of each other...
 _DEBUG = false
 
 function love.load()
+  love.graphics.setDefaultFilter("nearest", "nearest", 8)
   local bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
   Vector = require("libs.vector")
   Timer = require("libs.timer")
