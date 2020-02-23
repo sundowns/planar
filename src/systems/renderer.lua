@@ -14,7 +14,7 @@ function renderer:init()
   }
   self.final_score_text = nil
   self.game_over = false
-  self.game_over_text = love.graphics.newText(love.graphics.getFont(), "GAME OVER")
+  self.game_over_text = love.graphics.newText(_fonts["GAME_OVER"], "GAME OVER")
   -- Screen shake shit
   self.shake_screen = false
   self.shake_duration = 0
@@ -61,7 +61,7 @@ end
 
 function renderer:display_final_score(final)
   self.game_over = true
-  self.final_score_text = love.graphics.newText(love.graphics.getFont(), "Final score: " .. final)
+  self.final_score_text = love.graphics.newText(_fonts["FINAL_SCORE"], "SCORE: " .. final)
 end
 
 function renderer:phase_update(new_phase)

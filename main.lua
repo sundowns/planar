@@ -11,6 +11,12 @@ function love.load()
   Concord = require("libs.concord")
   moonshine = require("libs.moonshine")
 
+  _fonts = {
+    ["SCORE_COUNTER"] = love.graphics.newFont("resources/fonts/Xolonium-Regular.ttf", 32),
+    ["GAME_OVER"] = love.graphics.newFont("resources/fonts/venus rising rg.ttf", 32),
+    ["FINAL_SCORE"] = love.graphics.newFont("resources/fonts/Xolonium-Regular.ttf", 24)
+  }
+
   _components = Concord.components
   _systems = Concord.systems
   _worlds = Concord.worlds

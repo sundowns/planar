@@ -15,7 +15,7 @@ return {
     START = 0,
     INCREMENT = 10,
     X = 10,
-    Y = 10
+    Y = 8
   },
   REMOVE_OBSTACLES_BUFFER_DISTANCE = 100, -- this MUST be greater than SPAWN_OFFSCREEN_OFFSET
   CHARGE_BAR_HEIGHT = 0.04,
