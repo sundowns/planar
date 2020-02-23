@@ -11,7 +11,7 @@ function spawning:init()
   self.min_obstacle_velocity = _constants.SPAWNER.BASE_MIN_OBSTACLE_VELOCITY
   self.max_obstacle_velocity = _constants.SPAWNER.BASE_MAX_OBSTACLE_VELOCITY
 
-  self.minimum_spawn_interval = 0.05
+  self.minimum_spawn_interval = 0.1
 end
 
 function spawning:player_collided()
@@ -35,7 +35,7 @@ function spawning:begin_wave()
 
   self.increase_rate_fn =
     self.wave_timer:every(
-    3,
+    4,
     function()
       self:increase_spawn_rate()
     end
@@ -43,7 +43,7 @@ function spawning:begin_wave()
 end
 
 function spawning:increase_spawn_rate()
-  self.spawn_interval = math.max((1 / math.log(2.5 * self.time_elapsed)) - 0.1, self.minimum_spawn_interval)
+  self.spawn_interval = math.max((1 / math.log(2 * self.time_elapsed)) - 0.1, self.minimum_spawn_interval)
   if self.spawn_interval == self.minimum_spawn_interval then
     self.wave_timer:cancel(self.increase_rate_fn)
   end
