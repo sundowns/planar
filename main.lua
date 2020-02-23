@@ -12,7 +12,7 @@ function love.load()
   moonshine = require("libs.moonshine")
 
   _fonts = {
-    ["SCORE_COUNTER"] = love.graphics.newFont("resources/fonts/Xolonium-Regular.ttf", 32),
+    ["SCORE_COUNTER"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 32),
     ["GAME_OVER"] = love.graphics.newFont("resources/fonts/venus rising rg.ttf", 32),
     ["FINAL_SCORE"] = love.graphics.newFont("resources/fonts/Xolonium-Regular.ttf", 24)
   }
@@ -54,11 +54,11 @@ end
 
 function love.keypressed(key, _, _)
   if key == "r" then
-    love.event.quit("restart")
+    -- love.event.quit("restart")
   elseif key == "escape" then
     love.event.quit()
   elseif key == "f1" then
-    _DEBUG = not _DEBUG
+    -- _DEBUG = not _DEBUG
   elseif key == "space" then
     _worlds.game:emit("attempt_phase_shift")
   end

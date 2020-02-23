@@ -33,8 +33,8 @@ end
 
 function transform:apply_friction(friction, dt)
   if self.velocity:len() > 0 then
-    self.velocity = self.velocity - self.velocity:normalized() * (self.velocity:len() * friction * dt)
-    if self.velocity:len() < 5 then
+    self.velocity = self.velocity - (self.velocity:normalized() * self.velocity:len() * friction) * dt
+    if self.velocity:len() < 3 then
       self.velocity = Vector(0, 0)
     end
   end

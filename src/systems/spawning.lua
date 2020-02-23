@@ -39,7 +39,6 @@ end
 
 function spawning:increase_spawn_rate()
   self.spawn_interval = math.max((1 / math.log(2.5 * self.time_elapsed)) - 0.1, self.minimum_spawn_interval)
-  -- print(self.time_elapsed .. " , " .. self.spawn_interval)
   if self.spawn_interval == self.minimum_spawn_interval then
     self.wave_timer:cancel(self.increase_rate_fn)
   end

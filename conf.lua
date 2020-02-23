@@ -6,7 +6,8 @@ function love.conf(t)
   t.window.minheight = 720
   t.console = true
   t.window.fullscreen = false
-  t.window.msaa = 4
+  t.window.msaa = 8
+  t.window.vsync = 1
 
   t.releases = {
     title = game_title, -- The project title (string)
