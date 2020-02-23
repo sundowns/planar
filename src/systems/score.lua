@@ -7,13 +7,14 @@ function score:init()
     self.timer:every(
         2,
         function()
-            self:increment(self.score_increment)
+            flux.to(self, 1, {current = (self.current + 10)})
         end
     )
 end
 
 function score:player_collided()
-    self:getWorld():emit("display_final_score", self.current)
+    local output = math.floor(self.current + 0.5)
+    self:getWorld():emit("display_final_score", output)
     self:disable()
 end
 
@@ -27,7 +28,8 @@ end
 
 function score:draw_ui()
     love.graphics.setColor(0, 1, 0, 1)
-    love.graphics.print(self.current, _constants.SCORE.X, _constants.SCORE.Y)
+    local output = math.floor(self.current + 0.5)
+    love.graphics.print(output, _constants.SCORE.X, _constants.SCORE.Y)
 end
 
 return score
