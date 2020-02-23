@@ -6,6 +6,7 @@ function phasing:init()
   self.ripple_radius = 0
   self.ripple_origin = Vector(0, 0)
   self.ripple_transparency = 0
+  self.ripple_active = false
   self.canPhase = true
   self.timer = Timer.new()
   self.sfx = love.audio.newSource("resources/audio/phaseshift2.wav", "static")
@@ -32,7 +33,7 @@ function phasing:update(dt)
     if e:has(_components.charge) then
       local charge = e:get(_components.charge)
       if charge.current_charge < maximum then
-        charge.current_charge = charge.current_charge + (0.25 * dt)
+        charge.current_charge = charge.current_charge + (0.5 * (dt * (math.max(charge.current_charge, 1.2) / maximum)))
         if charge.current_charge > maximum then
           charge.current_charge = maximum
         end
@@ -41,13 +42,12 @@ function phasing:update(dt)
   end
 
   -- Ripple
-  if self.ripple_radius > 0 then
-    if love.graphics.getWidth() > self.ripple_radius and self.ripple_transparency > 0 then
-      self.ripple_radius = self.ripple_radius + (600 * dt)
-      self.ripple_transparency = self.ripple_transparency - (0.8 * dt)
-    else --disperse the ripple
+  if self.ripple_active then
+    if love.graphics.getWidth() < self.ripple_radius and self.ripple_transparency <= 0 then
+      --disperse the ripple
       self.ripple_radius = 0
       self.ripple_transparency = 0
+      self.ripple_active = false
     end
   end
 end
@@ -102,9 +102,12 @@ function phasing:trigger_phase_shift()
 end
 
 function phasing:ripple(origin)
+  self.ripple_active = true
   self.ripple_origin = origin
   self.ripple_transparency = 0.75
   self.ripple_radius = 0.1
+  -- this will tween to double the width of the screen
+  self.timer:tween(8, self, {ripple_radius = love.graphics.getWidth(), ripple_transparency = 0}, "out-elastic")
 end
 
 function phasing:draw(dt)

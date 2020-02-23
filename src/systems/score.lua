@@ -13,12 +13,13 @@ function score:init()
 end
 
 function score:player_collided()
-    self:getWorld():emit("display_final_score", self.current)
+    local output = math.floor(self.current + 0.5)
+    self:getWorld():emit("display_final_score", output)
     self:disable()
 end
 
 function score:increment(delta_points)
-    self.current = self.current + delta_points
+    self.timer:tween(1, self, {current = self.current + delta_points})
 end
 
 function score:update(dt)
@@ -27,7 +28,8 @@ end
 
 function score:draw_ui()
     love.graphics.setColor(0, 1, 0, 1)
-    love.graphics.print(self.current, _constants.SCORE.X, _constants.SCORE.Y)
+    local output = math.floor(self.current + 0.5)
+    love.graphics.print(output, _constants.SCORE.X, _constants.SCORE.Y)
 end
 
 return score
