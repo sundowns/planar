@@ -1,5 +1,5 @@
 local _worlds = nil -- should not have visbility of each other...
-_DEBUG = false
+_DEBUG = true
 
 function love.load()
   local bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
@@ -14,13 +14,15 @@ function love.load()
   _fonts = {
     ["SCORE_COUNTER"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 32),
     ["GAME_OVER"] = love.graphics.newFont("resources/fonts/venus rising rg.ttf", 32),
-    ["FINAL_SCORE"] = love.graphics.newFont("resources/fonts/Xolonium-Regular.ttf", 24)
+    ["FINAL_SCORE"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 24)
   }
 
   _components = Concord.components
   _systems = Concord.systems
   _worlds = Concord.worlds
   _assemblages = Concord.assemblages
+
+  _sprites = require("src.sprites")
 
   Concord.loadComponents("src/components")
   Concord.loadSystems("src/systems")
@@ -58,7 +60,7 @@ function love.keypressed(key, _, _)
   elseif key == "escape" then
     love.event.quit()
   elseif key == "f1" then
-    -- _DEBUG = not _DEBUG
+    _DEBUG = not _DEBUG
   elseif key == "space" then
     _worlds.game:emit("attempt_phase_shift")
   end

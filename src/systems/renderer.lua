@@ -1,6 +1,9 @@
 -- Draws polygonal shapes to the screen
 local renderer =
-  Concord.system({_components.transform, _components.polygon}, {_components.control, _components.transform, "PLAYER"})
+  Concord.system(
+  {_components.transform, _components.polygon},
+  {_components.control, _components.transform, _components.sprite, "PLAYER"}
+)
 
 function renderer:init()
   self.current_phase = nil
@@ -87,6 +90,17 @@ function renderer:draw_phased_polygon(e)
   love.graphics.polygon(draw_mode, polygon:calculate_world_vertices(position))
 end
 
+function renderer:draw_phased_sprite(e)
+  local transform = e:get(_components.transform)
+  local position = transform.position
+  local sprite = e:get(_components.sprite)
+  local phase = e:get(_components.phase)
+
+  local image = sprite.images[phase.current]
+  _util.l.resetColour()
+  love.graphics.draw(image, position.x - image:getWidth() / 2, position.y - image:getHeight() / 2)
+end
+
 function renderer:draw()
   _util.l.resetColour()
   -- draw background
@@ -113,7 +127,7 @@ function renderer:draw()
   for i = 1, self.pool.size do
     local e = self.pool:get(i)
     local phase = e:get(_components.phase)
-    if phase then
+    if phase and not e:has(_components.sprite) then
       if phase.current == self.current_phase then
         table.insert(current_phase_drawables, e)
       else
@@ -137,6 +151,9 @@ function renderer:draw()
   for i, poly in ipairs(current_phase_drawables) do
     self:draw_phased_polygon(poly)
   end
+
+  self:draw_phased_sprite(self.PLAYER:get(1))
+
   -- self.blur_effect.draw(
   --   function()
   --     for i, poly in ipairs(current_phase_drawables) do
