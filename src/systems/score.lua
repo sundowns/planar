@@ -16,8 +16,8 @@ end
 function score:player_collided()
     local output = math.floor(self.current + 0.5)
     self:getWorld():emit("display_final_score", output)
-    love.audio.stop(audio_bgm)
-    love.audio.play(audio_gameover)
+    love.audio.stop(_audio["BGM"])
+    love.audio.play(_audio["GAMEOVER"])
     self:disable()
 end
 
