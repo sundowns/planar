@@ -1,9 +1,10 @@
 local _worlds = nil -- should not have visbility of each other...
+local game_started = false
 _DEBUG = false
 
 function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest", 8)
-  local bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
+  audio_ambience = love.audio.newSource("resources/audio/pulsing2.wav", "stream")
   Vector = require("libs.vector")
   Timer = require("libs.timer")
   _constants = require("src.constants")
@@ -31,54 +32,88 @@ function love.load()
   Concord.loadAssemblages("src/assemblages")
 
   --https://hc.readthedocs.io/en/latest/MainModule.html#initialization
+  audio_ambience:setLooping(true)
+  love.audio.play(audio_ambience)
   _worlds.game:emit("set_collision_world", "RED", HC.new())
   _worlds.game:emit("set_collision_world", "BLUE", HC.new())
-
-  bgm:setLooping(true)
-  love.audio.play(bgm)
   -- Assemble the player entity
   _assemblages.player:assemble(
     Concord.entity(_worlds.game),
     Vector(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
   )
-  _worlds.game:emit("phase_update", "RED")
-  _worlds.game:emit("begin_wave")
+  audio_bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
+  audio_bgm:setLooping(true)
 end
 
 function love.update(dt)
-  _worlds.game:emit("update", dt)
+  if game_started then
+    _worlds.game:emit("update", dt)
+  else
+    _worlds.title:emit("update", dt)
+  end
 end
 
 function love.draw()
-  _worlds.game:emit("draw")
+  if game_started then
+    _worlds.game:emit("draw")
 
-  _worlds.game:emit("draw_ui")
+    _worlds.game:emit("draw_ui")
+  else
+    _worlds.title:emit("draw")
+  end
 end
 
 function love.keypressed(key, _, _)
-  if key == "escape" then
-    -- love.event.quit()
+  if key == "r" then
+    -- love.event.quit("restart")
+  elseif key == "escape" then
+    love.event.quit()
   elseif key == "f1" then
-    -- _DEBUG = not _DEBUG
+    _DEBUG = not _DEBUG
   elseif key == "space" then
-    _worlds.game:emit("attempt_phase_shift")
+    if game_started then
+      _worlds.game:emit("attempt_phase_shift")
+    else
+      game_started = true
+      love.audio.stop(audio_ambience)
+      love.audio.play(audio_bgm)
+      _worlds.game:emit("phase_update", "RED")
+      _worlds.game:emit("begin_wave")
+    end
   end
 
-  _worlds.game:emit("keypressed", key)
+  if game_started then
+    _worlds.game:emit("keypressed", key)
+  else
+    _worlds.title:emit("keypressed", key)
+  end
 end
 
 function love.keyreleased(key)
-  _worlds.game:emit("keyreleased", key)
+  if game_started then
+    _worlds.game:emit("keyreleased", key)
+  else
+    _worlds.title:emit("keyreleased", key)
+  end
 end
 
 function love.mousepressed(x, y, button, _, _)
-  _worlds.game:emit("mousepressed", x, y, button)
+  if game_started then
+    _worlds.game:emit("mousepressed", x, y, button)
+  else
+    _worlds.title:emit("mousepressed", x, y, button)
+  end
 end
 
 function love.mousereleased(x, y, button, _, _)
-  _worlds.game:emit("mousereleased", x, y, button)
+  if game_started then
+    _worlds.game:emit("mousereleased", x, y, button)
+  else
+    _worlds.title:emit("mousereleased", x, y, button)
+  end
 end
 
 function love.resize(w, h)
   _worlds.game:emit("resize", w, h)
+  _worlds.title:emit("resize", w, h)
 end
