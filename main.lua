@@ -18,7 +18,8 @@ function love.load()
   _fonts = {
     ["SCORE_COUNTER"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 48),
     ["FINAL_SCORE"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 36),
-    ["RESTART"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 24)
+    ["RESTART"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 24),
+    ["CONTROLS"] = love.graphics.newFont("resources/fonts/whitrabt.ttf", 16)
   }
 
   _components = Concord.components
