@@ -36,7 +36,10 @@ end
 function flight:update_entity_trail(e, dt)
   local trail = e:get(_components.trail)
   local transform = e:get(_components.transform)
-  trail:update(dt, Vector(0, 0), 0)
+
+  -- spawn behind the ship offset by half the width
+  local offset_direction = -1 * (transform.velocity:clone():normalized())
+  trail:update(dt, transform.position, offset_direction)
 
   local control = e:get(_components.control)
   if trail.system:isActive() then

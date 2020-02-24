@@ -18,51 +18,51 @@ return {
     --     ship_particle_sheet:getDimensions()
     --   )
     -- }
+    -- quads = {
+    --   love.graphics.newQuad(
+    --     0,
+    --     PARTICLE_QUAD_WIDTH,
+    --     PARTICLE_QUAD_WIDTH,
+    --     PARTICLE_QUAD_WIDTH,
+    --     ship_particle_sheet:getDimensions()
+    --   ),
+    --   love.graphics.newQuad(
+    --     PARTICLE_QUAD_WIDTH,
+    --     PARTICLE_QUAD_WIDTH,
+    --     PARTICLE_QUAD_WIDTH,
+    --     PARTICLE_QUAD_WIDTH,
+    --     ship_particle_sheet:getDimensions()
+    --   ),
+    --   love.graphics.newQuad(
+    --     2 * PARTICLE_QUAD_WIDTH,
+    --     PARTICLE_QUAD_WIDTH,
+    --     PARTICLE_QUAD_WIDTH,
+    --     PARTICLE_QUAD_WIDTH,
+    --     ship_particle_sheet:getDimensions()
+    --   )
+    -- }
     quads = {
       love.graphics.newQuad(
         0,
-        PARTICLE_QUAD_WIDTH,
+        2 * PARTICLE_QUAD_WIDTH,
         PARTICLE_QUAD_WIDTH,
         PARTICLE_QUAD_WIDTH,
         ship_particle_sheet:getDimensions()
       ),
       love.graphics.newQuad(
         PARTICLE_QUAD_WIDTH,
-        PARTICLE_QUAD_WIDTH,
+        2 * PARTICLE_QUAD_WIDTH,
         PARTICLE_QUAD_WIDTH,
         PARTICLE_QUAD_WIDTH,
         ship_particle_sheet:getDimensions()
       ),
       love.graphics.newQuad(
         2 * PARTICLE_QUAD_WIDTH,
-        PARTICLE_QUAD_WIDTH,
+        2 * PARTICLE_QUAD_WIDTH,
         PARTICLE_QUAD_WIDTH,
         PARTICLE_QUAD_WIDTH,
         ship_particle_sheet:getDimensions()
       )
     }
-    -- quads = {
-    --   love.graphics.newQuad(
-    --     0,
-    --     2 * PARTICLE_QUAD_WIDTH,
-    --     PARTICLE_QUAD_WIDTH,
-    --     PARTICLE_QUAD_WIDTH,
-    --     ship_particle_sheet:getDimensions()
-    --   ),
-    --   love.graphics.newQuad(
-    --     PARTICLE_QUAD_WIDTH,
-    --     2 * PARTICLE_QUAD_WIDTH,
-    --     PARTICLE_QUAD_WIDTH,
-    --     PARTICLE_QUAD_WIDTH,
-    --     ship_particle_sheet:getDimensions()
-    --   ),
-    --   love.graphics.newQuad(
-    --     2 * PARTICLE_QUAD_WIDTH,
-    --     2 * PARTICLE_QUAD_WIDTH,
-    --     PARTICLE_QUAD_WIDTH,
-    --     PARTICLE_QUAD_WIDTH,
-    --     ship_particle_sheet:getDimensions()
-    --   )
-    -- }
   }
 }
