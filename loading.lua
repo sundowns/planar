@@ -5,7 +5,8 @@ local MINIMUM_LOAD_TIME = 1.25
 local load_timer = 0
 
 function loading:init()
-  splash_screen = love.graphics.newImage("resources/backgrounds/red.png")
+  love.graphics.setDefaultFilter("nearest", "nearest", 4)
+  splash_screen = love.graphics.newImage("resources/misc/splashscreen.png")
 end
 
 function loading:enter(previous, task, data)
@@ -16,7 +17,7 @@ end
 
 function loading:update(dt)
   if splash_displaying and load_timer > MINIMUM_LOAD_TIME then
-    loadGame()
+    load_game()
   end
 
   splash_displaying = true
@@ -34,8 +35,7 @@ function loading:draw()
   )
 end
 
-function loadGame()
-  love.graphics.setDefaultFilter("nearest", "nearest", 8)
+function load_game()
   Vector = require("libs.vector")
   Timer = require("libs.timer")
   _constants = require("src.constants")
