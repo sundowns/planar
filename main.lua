@@ -42,6 +42,7 @@ function love.load()
     Vector(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
   )
   audio_bgm = love.audio.newSource("resources/audio/bgm.wav", "stream")
+  audio_gameover = love.audio.newSource("resources/audio/gameover.wav", "stream")
   audio_bgm:setLooping(true)
 end
 
