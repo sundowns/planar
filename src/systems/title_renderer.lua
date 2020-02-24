@@ -43,6 +43,8 @@ function title_renderer:draw()
     love.graphics.getHeight() / self.background_images[self.current_phase]:getHeight()
   )
   _util.l.resetColour()
+
+  love.graphics.setLineWidth(1)
 end
 
 function title_renderer:draw_ui()
