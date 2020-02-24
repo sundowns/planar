@@ -4,7 +4,7 @@ function love.conf(t)
   t.window.title = game_title
   t.window.minwidth = 720 -- 1280 for 16:9
   t.window.minheight = 720
-  t.console = true
+  t.console = false
   t.window.fullscreen = false
   t.window.msaa = 8
   t.window.vsync = 1
