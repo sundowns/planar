@@ -76,6 +76,8 @@ commands:
             cp resources -r dist
             cp main.lua dist
             cp conf.lua dist
+            cp game.lua dist
+            cp loading.lua dist
             cd dist
             zip -9 -r game.love .
       - store_artifacts:
