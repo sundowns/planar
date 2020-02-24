@@ -17,18 +17,18 @@ function title_renderer:init()
   }
   self.title_image = love.graphics.newImage("resources/misc/title.png")
   self.start_prompt = love.graphics.newText(_fonts["RESTART"], "PRESS SPACE TO START")
-  self.can_restart = false
-  self.restart_timer = Timer.new()
-  self.restart_timer:after(
+  self.can_start = false
+  self.start_timer = Timer.new()
+  self.start_timer:after(
     2,
     function()
-      self.can_restart = true
+      self.can_start = true
     end
   )
 end
 
 function title_renderer:update(dt)
-  self.restart_timer:update(dt)
+  self.start_timer:update(dt)
 end
 
 function title_renderer:draw()
@@ -43,8 +43,6 @@ function title_renderer:draw()
     love.graphics.getHeight() / self.background_images[self.current_phase]:getHeight()
   )
   _util.l.resetColour()
-
-  love.graphics.setLineWidth(1)
 end
 
 function title_renderer:draw_ui()
@@ -55,7 +53,7 @@ function title_renderer:draw_ui()
     love.graphics.getWidth() / 2 - self.title_image:getWidth() / 2,
     love.graphics.getHeight() / 2 - self.title_image:getHeight() - self.start_prompt:getHeight()
   )
-  if self.can_restart then
+  if self.can_start then
     love.graphics.draw(
       self.start_prompt,
       love.graphics.getWidth() / 2 - self.start_prompt:getWidth() / 2,
