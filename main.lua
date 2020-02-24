@@ -56,10 +56,10 @@ end
 function love.draw()
   if game_started then
     _worlds.game:emit("draw")
-
     _worlds.game:emit("draw_ui")
   else
     _worlds.title:emit("draw")
+    _worlds.title:emit("draw_ui")
   end
 end
 
