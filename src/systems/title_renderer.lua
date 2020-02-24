@@ -64,11 +64,4 @@ function title_renderer:draw_ui()
   end
 end
 
--- this definitely doesnt belong here but...shut up!!
-function title_renderer:keypressed(key)
-  if self.can_restart and key == "return" then
-    love.event.quit("restart")
-  end
-end
-
 return title_renderer
