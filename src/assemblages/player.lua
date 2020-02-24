@@ -26,6 +26,10 @@ return Concord.assemblage(
     ):give(_components.flight, PLAYER_ACCELERATION):give(_components.control, bindings):give(
       _components.charge,
       _constants.PLAYER.MAX_CHARGE
-    ):give(_components.collides):give(_components.sprite, _sprites["SHIP"])
+    ):give(_components.collides):give(_components.sprite, _sprites["SHIP"]):give(
+      _components.trail,
+      _sprites["PARTICLES"].sheet,
+      _sprites["PARTICLES"].quads
+    )
   end
 )
